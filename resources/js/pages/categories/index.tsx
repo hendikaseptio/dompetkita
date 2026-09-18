@@ -1,8 +1,15 @@
 import { Head, useForm } from '@inertiajs/react';
-import { ArrowDownRight, ArrowUpRight, Plus, Tag, Trash2, Edit2 } from 'lucide-react';
+import { ArrowDownRight, ArrowUpRight, Edit2, Plus, Tag, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
-import AppLayout from '@/layouts/app-layout';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -75,15 +82,15 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
         <>
             <Head title="Manajemen Kategori" />
 
-            <div className="p-6 space-y-6 max-w-6xl mx-auto">
+            <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                            <Tag className="size-6 text-emerald-400" />
+                        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                            <Tag className="size-6 text-emerald-500" />
                             Kategori Pemasukan & Pengeluaran
                         </h1>
-                        <p className="text-sm text-slate-400 mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                             Atur klasifikasi jenis transaksi keuangan keluarga Anda.
                         </p>
                     </div>
@@ -94,7 +101,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                             addForm.setData('type', activeTab);
                             setIsAddOpen(true);
                         }}
-                        className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold gap-2 shadow-lg shadow-emerald-500/20"
+                        className="font-bold gap-2 shadow-sm"
                     >
                         <Plus className="size-4" />
                         Tambah Kategori Baru
@@ -102,47 +109,45 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                 </div>
 
                 {/* Tabs Selector */}
-                <div className="flex gap-2 border-b border-slate-800 pb-2">
-                    <button
+                <div className="flex gap-2 border-b border-border pb-2">
+                    <Button
                         type="button"
                         onClick={() => setActiveTab('expense')}
-                        className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'expense'
-                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                            : 'text-slate-400 hover:text-white'
-                            }`}
+                        variant={activeTab === 'expense' ? 'default' : 'outline'}
+                        size="sm"
+                        className="gap-2"
                     >
                         <ArrowDownRight className="size-4" />
                         Pengeluaran ({categories.filter((c) => c.type === 'expense').length})
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         type="button"
                         onClick={() => setActiveTab('income')}
-                        className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'income'
-                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                            : 'text-slate-400 hover:text-white'
-                            }`}
+                        variant={activeTab === 'income' ? 'default' : 'outline'}
+                        size="sm"
+                        className="gap-2"
                     >
                         <ArrowUpRight className="size-4" />
                         Pemasukan ({categories.filter((c) => c.type === 'income').length})
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Categories Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredCategories.map((cat) => (
-                        <div
+                        <Card
                             key={cat.id}
-                            className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between hover:border-slate-700 transition-all"
+                            className="shadow-sm border-border p-4 flex items-center justify-between hover:border-accent transition-all"
                         >
                             <div className="flex items-center gap-3">
                                 <div
-                                    className="size-4 rounded-full border border-slate-700 shadow-sm"
+                                    className="size-4 rounded-full border border-border shadow-sm"
                                     style={{ backgroundColor: cat.color || '#10B981' }}
                                 />
                                 <div>
-                                    <h4 className="font-semibold text-white text-sm">{cat.name}</h4>
+                                    <h4 className="font-semibold text-foreground text-sm">{cat.name}</h4>
                                     {cat.is_default && (
-                                        <span className="text-[10px] text-slate-500 uppercase tracking-wider">Default</span>
+                                        <Badge variant="secondary" className="text-[10px] uppercase">Default</Badge>
                                     )}
                                 </div>
                             </div>
@@ -153,7 +158,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                     onClick={() => handleOpenEdit(cat)}
                                     variant="ghost"
                                     size="sm"
-                                    className="text-slate-400 hover:text-white p-1.5 h-auto"
+                                    className="text-muted-foreground hover:text-foreground p-1.5 h-auto"
                                 >
                                     <Edit2 className="size-3.5" />
                                 </Button>
@@ -162,103 +167,106 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                     onClick={() => handleDelete(cat.id, cat.name)}
                                     variant="ghost"
                                     size="sm"
-                                    className="text-rose-400 hover:text-rose-300 p-1.5 h-auto"
+                                    className="text-rose-500 hover:text-rose-600 p-1.5 h-auto"
                                 >
                                     <Trash2 className="size-3.5" />
                                 </Button>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
 
-                {/* Modal Add Category */}
-                {isAddOpen && (
-                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-                            <h3 className="text-lg font-bold text-white">Tambah Kategori Baru</h3>
-                            <form onSubmit={handleAddSubmit} className="space-y-4">
-                                <div>
-                                    <Label className="text-slate-300">Jenis Kategori</Label>
-                                    <select
-                                        value={addForm.data.type}
-                                        onChange={(e) => addForm.setData('type', e.target.value as any)}
-                                        className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-emerald-500"
-                                    >
-                                        <option value="expense">Pengeluaran (Expense)</option>
-                                        <option value="income">Pemasukan (Income)</option>
-                                    </select>
-                                </div>
+                {/* Dialog Add Category */}
+                <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Tambah Kategori Baru</DialogTitle>
+                        </DialogHeader>
 
-                                <div>
-                                    <Label className="text-slate-300">Nama Kategori</Label>
+                        <form onSubmit={handleAddSubmit} className="space-y-4 pt-2">
+                            <div>
+                                <Label>Jenis Kategori</Label>
+                                <select
+                                    value={addForm.data.type}
+                                    onChange={(e) => addForm.setData('type', e.target.value as any)}
+                                    className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm focus:ring-2 focus:ring-ring"
+                                >
+                                    <option value="expense">Pengeluaran (Expense)</option>
+                                    <option value="income">Pemasukan (Income)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <Label>Nama Kategori</Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Contoh: Langganan Netflix, Servis Laptop"
+                                    value={addForm.data.name}
+                                    onChange={(e) => addForm.setData('name', e.target.value)}
+                                    className="mt-1"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <Label>Warna Indikator</Label>
+                                <div className="flex items-center gap-3 mt-1.5">
                                     <Input
-                                        type="text"
-                                        placeholder="Contoh: Langganan Netflix, Servis Laptop"
-                                        value={addForm.data.name}
-                                        onChange={(e) => addForm.setData('name', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
-                                        required
+                                        type="color"
+                                        value={addForm.data.color}
+                                        onChange={(e) => addForm.setData('color', e.target.value)}
+                                        className="size-10 p-1 bg-background border-input rounded-lg cursor-pointer"
                                     />
+                                    <span className="text-xs text-muted-foreground font-mono">{addForm.data.color}</span>
                                 </div>
+                            </div>
 
-                                <div>
-                                    <Label className="text-slate-300">Warna Indikator</Label>
-                                    <div className="flex items-center gap-3 mt-1.5">
-                                        <Input
-                                            type="color"
-                                            value={addForm.data.color}
-                                            onChange={(e) => addForm.setData('color', e.target.value)}
-                                            className="size-10 p-1 bg-slate-800 border-slate-700 rounded-lg cursor-pointer"
-                                        />
-                                        <span className="text-xs text-slate-400 font-mono">{addForm.data.color}</span>
-                                    </div>
-                                </div>
+                            <div className="flex justify-end gap-2 pt-2">
+                                <Button
+                                    type="button"
+                                    onClick={() => setIsAddOpen(false)}
+                                    variant="outline"
+                                >
+                                    Batal
+                                </Button>
+                                <Button type="submit" disabled={addForm.processing} className="font-bold">
+                                    Simpan Kategori
+                                </Button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
 
-                                <div className="flex justify-end gap-2 pt-2">
-                                    <Button
-                                        type="button"
-                                        onClick={() => setIsAddOpen(false)}
-                                        variant="outline"
-                                        className="border-slate-700 text-slate-300"
-                                    >
-                                        Batal
-                                    </Button>
-                                    <Button type="submit" disabled={addForm.processing} className="bg-emerald-500 text-slate-950 font-bold">
-                                        Simpan Kategori
-                                    </Button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
-
-                {/* Modal Edit Category */}
+                {/* Dialog Edit Category */}
                 {editingCat && (
-                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-                            <h3 className="text-lg font-bold text-white">Edit Kategori</h3>
-                            <form onSubmit={handleEditSubmit} className="space-y-4">
+                    <Dialog open={!!editingCat} onOpenChange={() => setEditingCat(null)}>
+                        <DialogContent className="max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Edit Kategori</DialogTitle>
+                            </DialogHeader>
+
+                            <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
                                 <div>
-                                    <Label className="text-slate-300">Nama Kategori</Label>
+                                    <Label>Nama Kategori</Label>
                                     <Input
                                         type="text"
                                         value={editForm.data.name}
                                         onChange={(e) => editForm.setData('name', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
+                                        className="mt-1"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <Label className="text-slate-300">Warna Indikator</Label>
+                                    <Label>Warna Indikator</Label>
                                     <div className="flex items-center gap-3 mt-1.5">
                                         <Input
                                             type="color"
                                             value={editForm.data.color}
                                             onChange={(e) => editForm.setData('color', e.target.value)}
-                                            className="size-10 p-1 bg-slate-800 border-slate-700 rounded-lg cursor-pointer"
+                                            className="size-10 p-1 bg-background border-input rounded-lg cursor-pointer"
                                         />
-                                        <span className="text-xs text-slate-400 font-mono">{editForm.data.color}</span>
+                                        <span className="text-xs text-muted-foreground font-mono">{editForm.data.color}</span>
                                     </div>
                                 </div>
 
@@ -267,19 +275,18 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                         type="button"
                                         onClick={() => setEditingCat(null)}
                                         variant="outline"
-                                        className="border-slate-700 text-slate-300"
                                     >
                                         Batal
                                     </Button>
-                                    <Button type="submit" disabled={editForm.processing} className="bg-emerald-500 text-slate-950 font-bold">
+                                    <Button type="submit" disabled={editForm.processing} className="font-bold">
                                         Simpan Perubahan
                                     </Button>
                                 </div>
                             </form>
-                        </div>
-                    </div>
+                        </DialogContent>
+                    </Dialog>
                 )}
             </div>
-        </ >
+        </>
     );
 }

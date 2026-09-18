@@ -1,11 +1,19 @@
 import { Head, useForm } from '@inertiajs/react';
-import { CreditCard, DollarSign, Landmark, Plus, Smartphone, Trash2, Wallet as WalletIcon, Edit2 } from 'lucide-react';
+import { CreditCard, DollarSign, Edit2, Landmark, Plus, Smartphone, Trash2, Wallet as WalletIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import AppLayout from '@/layouts/app-layout';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CurrencyInput } from '@/components/ui/currency-input';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CurrencyInput } from '@/components/ui/currency-input';
+import { formatRp } from '@/lib/formatters';
 
 interface Wallet {
     id: number;
@@ -39,24 +47,16 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
 
     const deleteForm = useForm({});
 
-    const formatRp = (num: number) => {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            maximumFractionDigits: 0,
-        }).format(num);
-    };
-
     const getTypeIcon = (type: string) => {
         switch (type) {
             case 'digital':
-                return <Smartphone className="size-5 text-cyan-400" />;
+                return <Smartphone className="size-5 text-cyan-500" />;
             case 'bank':
-                return <Landmark className="size-5 text-blue-400" />;
+                return <Landmark className="size-5 text-blue-500" />;
             case 'saving':
-                return <CreditCard className="size-5 text-purple-400" />;
+                return <CreditCard className="size-5 text-purple-500" />;
             default:
-                return <DollarSign className="size-5 text-emerald-400" />;
+                return <DollarSign className="size-5 text-emerald-500" />;
         }
     };
 
@@ -88,7 +88,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
     };
 
     const handleDelete = (id: number, name: string) => {
-        if (confirm(`Hapus dompet "${name}"? Seluruh histori akan tetap ada.`)) {
+        if (confirm(`Hapus dompet "${name}"? Seluruh histori transaksi akan tetap tersimpan.`)) {
             deleteForm.delete(`/wallets/${id}`);
         }
     };
@@ -97,15 +97,15 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
         <>
             <Head title="Manajemen Wallet" />
 
-            <div className="p-6 space-y-6 max-w-7xl mx-auto">
+            <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
                 {/* Top Banner */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-                            <WalletIcon className="size-6 text-emerald-400" />
+                        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                            <WalletIcon className="size-6 text-emerald-500" />
                             Dompet & Akun Keuangan
                         </h1>
-                        <p className="text-sm text-slate-400 mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                             Kelola seluruh sumber uang (Tunai, E-Wallet, Rekening Bank, Tabungan Keluarga).
                         </p>
                     </div>
@@ -113,7 +113,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                     <Button
                         type="button"
                         onClick={() => setIsAddModalOpen(true)}
-                        className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold gap-2 shadow-lg shadow-emerald-500/20"
+                        className="font-bold gap-2 shadow-sm"
                     >
                         <Plus className="size-4" />
                         Tambah Dompet Baru
@@ -121,34 +121,34 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                 </div>
 
                 {/* Total Balance Card */}
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex items-center justify-between">
+                <Card className="shadow-sm border-border p-6 flex flex-row items-center justify-between">
                     <div>
-                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Harta Uang Keluarga</span>
-                        <div className="text-3xl font-black text-emerald-400 mt-1">{formatRp(totalBalance)}</div>
+                        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Saldo Seluruh Wallet</span>
+                        <div className="text-3xl font-black text-emerald-500 mt-1">{formatRp(totalBalance)}</div>
                     </div>
-                    <div className="text-right text-xs text-slate-400">
+                    <Badge variant="outline" className="text-xs px-3 py-1 font-semibold">
                         {wallets.length} Dompet Aktif
-                    </div>
-                </div>
+                    </Badge>
+                </Card>
 
                 {/* Wallets Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {wallets.map((w) => (
-                        <div
+                        <Card
                             key={w.id}
-                            className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-6 shadow-lg space-y-4 flex flex-col justify-between transition-all"
+                            className="shadow-sm border-border hover:border-accent rounded-2xl p-5 space-y-4 flex flex-col justify-between transition-all"
                         >
                             <div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-3 bg-slate-800 rounded-xl border border-slate-700">
+                                        <div className="p-3 bg-muted rounded-xl border border-border">
                                             {getTypeIcon(w.type)}
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-white text-lg">{w.name}</h3>
-                                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                                            <h3 className="font-bold text-foreground text-lg">{w.name}</h3>
+                                            <Badge variant="secondary" className="text-[10px] uppercase font-semibold">
                                                 {w.type === 'cash' ? 'Tunai / Cash' : w.type === 'digital' ? 'E-Wallet' : w.type === 'bank' ? 'Bank' : 'Tabungan'}
-                                            </span>
+                                            </Badge>
                                         </div>
                                     </div>
 
@@ -158,7 +158,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                             onClick={() => handleOpenEdit(w)}
                                             variant="ghost"
                                             size="sm"
-                                            className="text-slate-400 hover:text-white"
+                                            className="text-muted-foreground hover:text-foreground p-1.5 h-auto"
                                         >
                                             <Edit2 className="size-4" />
                                         </Button>
@@ -167,7 +167,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                             onClick={() => handleDelete(w.id, w.name)}
                                             variant="ghost"
                                             size="sm"
-                                            className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
+                                            className="text-rose-500 hover:text-rose-600 p-1.5 h-auto"
                                         >
                                             <Trash2 className="size-4" />
                                         </Button>
@@ -175,115 +175,118 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                 </div>
 
                                 {w.account_number && (
-                                    <p className="text-xs text-slate-400 mt-2 font-mono">
+                                    <p className="text-xs text-muted-foreground mt-2 font-mono">
                                         No. Rek/Akun: {w.account_number}
                                     </p>
                                 )}
                             </div>
 
-                            <div className="pt-4 border-t border-slate-800/80 flex items-end justify-between">
-                                <span className="text-xs text-slate-400">Saldo Saat Ini</span>
-                                <span className="text-xl font-bold font-mono text-white">{formatRp(Number(w.balance))}</span>
+                            <div className="pt-4 border-t border-border flex items-end justify-between">
+                                <span className="text-xs text-muted-foreground">Saldo Saat Ini</span>
+                                <span className="text-xl font-bold font-mono text-foreground">{formatRp(Number(w.balance))}</span>
                             </div>
-                        </div>
+                        </Card>
                     ))}
                 </div>
 
-                {/* Modal Add Wallet */}
-                {isAddModalOpen && (
-                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-                            <h3 className="text-lg font-bold text-white">Tambah Dompet Baru</h3>
-                            <form onSubmit={handleAddSubmit} className="space-y-4">
-                                <div>
-                                    <Label className="text-slate-300">Nama Dompet</Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Contoh: Dompet Fisik, GoPay, Bank BCA"
-                                        value={addForm.data.name}
-                                        onChange={(e) => addForm.setData('name', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
-                                        required
-                                    />
-                                </div>
+                {/* Dialog Add Wallet */}
+                <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Tambah Dompet Baru</DialogTitle>
+                        </DialogHeader>
 
-                                <div>
-                                    <Label className="text-slate-300">Jenis Dompet</Label>
-                                    <select
-                                        value={addForm.data.type}
-                                        onChange={(e) => addForm.setData('type', e.target.value as any)}
-                                        className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-emerald-500"
-                                    >
-                                        <option value="cash">Tunai (Cash)</option>
-                                        <option value="digital">Digital / E-Wallet (GoPay, OVO, ShopeePay)</option>
-                                        <option value="bank">Rekening Bank (BCA, Mandiri, BRI, dll)</option>
-                                        <option value="saving">Tabungan Khusus (Tabungan Nikah, Pendidikan)</option>
-                                    </select>
-                                </div>
+                        <form onSubmit={handleAddSubmit} className="space-y-4 pt-2">
+                            <div>
+                                <Label>Nama Dompet</Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Contoh: Dompet Fisik, GoPay, Bank BCA"
+                                    value={addForm.data.name}
+                                    onChange={(e) => addForm.setData('name', e.target.value)}
+                                    className="mt-1"
+                                    required
+                                />
+                            </div>
 
-                                <div>
-                                    <Label className="text-slate-300">Saldo Awal</Label>
-                                    <CurrencyInput
-                                        placeholder="0"
-                                        value={addForm.data.balance}
-                                        onChangeValue={(val) => addForm.setData('balance', val)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1 font-bold text-lg"
-                                        required
-                                    />
-                                </div>
+                            <div>
+                                <Label>Jenis Dompet</Label>
+                                <select
+                                    value={addForm.data.type}
+                                    onChange={(e) => addForm.setData('type', e.target.value as any)}
+                                    className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm focus:ring-2 focus:ring-ring"
+                                >
+                                    <option value="cash">Tunai (Cash)</option>
+                                    <option value="digital">Digital / E-Wallet (GoPay, OVO, ShopeePay)</option>
+                                    <option value="bank">Rekening Bank (BCA, Mandiri, BRI, dll)</option>
+                                    <option value="saving">Tabungan Khusus (Tabungan Nikah, Pendidikan)</option>
+                                </select>
+                            </div>
 
-                                <div>
-                                    <Label className="text-slate-300">Nomor Rekening / Akun (Opsional)</Label>
-                                    <Input
-                                        type="text"
-                                        placeholder="Contoh: 1234567890"
-                                        value={addForm.data.account_number}
-                                        onChange={(e) => addForm.setData('account_number', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
-                                    />
-                                </div>
+                            <div>
+                                <Label>Saldo Awal</Label>
+                                <CurrencyInput
+                                    placeholder="0"
+                                    value={addForm.data.balance}
+                                    onChangeValue={(val) => addForm.setData('balance', val)}
+                                    className="mt-1 font-bold text-lg"
+                                    required
+                                />
+                            </div>
 
-                                <div className="flex justify-end gap-2 pt-2">
-                                    <Button
-                                        type="button"
-                                        onClick={() => setIsAddModalOpen(false)}
-                                        variant="outline"
-                                        className="border-slate-700 text-slate-300"
-                                    >
-                                        Batal
-                                    </Button>
-                                    <Button type="submit" disabled={addForm.processing} className="bg-emerald-500 text-slate-950 font-bold">
-                                        Simpan Dompet
-                                    </Button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )}
+                            <div>
+                                <Label>Nomor Rekening / Akun (Opsional)</Label>
+                                <Input
+                                    type="text"
+                                    placeholder="Contoh: 1234567890"
+                                    value={addForm.data.account_number}
+                                    onChange={(e) => addForm.setData('account_number', e.target.value)}
+                                    className="mt-1"
+                                />
+                            </div>
 
-                {/* Modal Edit Wallet */}
+                            <div className="flex justify-end gap-2 pt-2">
+                                <Button
+                                    type="button"
+                                    onClick={() => setIsAddModalOpen(false)}
+                                    variant="outline"
+                                >
+                                    Batal
+                                </Button>
+                                <Button type="submit" disabled={addForm.processing} className="font-bold">
+                                    Simpan Dompet
+                                </Button>
+                            </div>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+                {/* Dialog Edit Wallet */}
                 {editingWallet && (
-                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-                            <h3 className="text-lg font-bold text-white">Edit Dompet</h3>
-                            <form onSubmit={handleEditSubmit} className="space-y-4">
+                    <Dialog open={!!editingWallet} onOpenChange={() => setEditingWallet(null)}>
+                        <DialogContent className="max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Edit Dompet</DialogTitle>
+                            </DialogHeader>
+
+                            <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
                                 <div>
-                                    <Label className="text-slate-300">Nama Dompet</Label>
+                                    <Label>Nama Dompet</Label>
                                     <Input
                                         type="text"
                                         value={editForm.data.name}
                                         onChange={(e) => editForm.setData('name', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
+                                        className="mt-1"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <Label className="text-slate-300">Jenis Dompet</Label>
+                                    <Label>Jenis Dompet</Label>
                                     <select
                                         value={editForm.data.type}
                                         onChange={(e) => editForm.setData('type', e.target.value as any)}
-                                        className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-emerald-500"
+                                        className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
                                     >
                                         <option value="cash">Tunai (Cash)</option>
                                         <option value="digital">Digital / E-Wallet</option>
@@ -293,12 +296,12 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                 </div>
 
                                 <div>
-                                    <Label className="text-slate-300">Nomor Rekening / Akun</Label>
+                                    <Label>Nomor Rekening / Akun</Label>
                                     <Input
                                         type="text"
                                         value={editForm.data.account_number}
                                         onChange={(e) => editForm.setData('account_number', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
+                                        className="mt-1"
                                     />
                                 </div>
 
@@ -307,17 +310,16 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                         type="button"
                                         onClick={() => setEditingWallet(null)}
                                         variant="outline"
-                                        className="border-slate-700 text-slate-300"
                                     >
                                         Batal
                                     </Button>
-                                    <Button type="submit" disabled={editForm.processing} className="bg-emerald-500 text-slate-950 font-bold">
+                                    <Button type="submit" disabled={editForm.processing} className="font-bold">
                                         Simpan Perubahan
                                     </Button>
                                 </div>
                             </form>
-                        </div>
-                    </div>
+                        </DialogContent>
+                    </Dialog>
                 )}
             </div>
         </>

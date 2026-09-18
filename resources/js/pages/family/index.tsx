@@ -1,8 +1,15 @@
 import { Head, useForm } from '@inertiajs/react';
-import { Copy, Check, Crown, Home, Shield, Trash2, UserPlus, Users } from 'lucide-react';
+import { Check, Copy, Crown, Home, Shield, Trash2, UserPlus, Users } from 'lucide-react';
 import React, { useState } from 'react';
-import AppLayout from '@/layouts/app-layout';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
@@ -81,7 +88,7 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
         <>
             <Head title="Pengaturan Keluarga" />
 
-            <div className="p-6 space-y-6 max-w-6xl mx-auto">
+            <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
                 {/* Header Banner */}
                 <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
                     <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -118,10 +125,10 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
 
                 {/* Multiple Families Switcher if user belongs to more than 1 */}
                 {allFamilies.length > 1 && (
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+                    <Card className="shadow-sm border-border p-4 flex items-center justify-between">
                         <div>
-                            <h3 className="font-semibold text-white">Ganti Keluarga</h3>
-                            <p className="text-xs text-slate-400">Anda terdaftar di beberapa grup keluarga.</p>
+                            <h3 className="font-semibold text-foreground">Ganti Keluarga</h3>
+                            <p className="text-xs text-muted-foreground">Anda terdaftar di beberapa grup keluarga.</p>
                         </div>
                         <div className="flex gap-2">
                             {allFamilies.map((f) => (
@@ -131,25 +138,24 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                     onClick={() => handleSwitchFamily(f.id)}
                                     variant={f.id === family.id ? 'default' : 'outline'}
                                     size="sm"
-                                    className={f.id === family.id ? 'bg-emerald-600 text-white' : ''}
                                 >
                                     {f.name}
                                 </Button>
                             ))}
                         </div>
-                    </div>
+                    </Card>
                 )}
 
                 {/* Members List */}
-                <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                    <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                <Card className="shadow-sm border-border p-6 space-y-4">
+                    <div className="flex items-center justify-between pb-4 border-b border-border">
                         <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl">
+                            <div className="p-2.5 bg-emerald-500/10 text-emerald-500 rounded-xl">
                                 <Users className="size-5" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-white">Anggota Keluarga</h2>
-                                <p className="text-xs text-slate-400">{family.members.length} Anggota Terdaftar</p>
+                                <h2 className="text-lg font-bold text-foreground">Anggota Keluarga</h2>
+                                <p className="text-xs text-muted-foreground">{family.members.length} Anggota Terdaftar</p>
                             </div>
                         </div>
                     </div>
@@ -158,28 +164,28 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                         {family.members.map((member) => (
                             <div
                                 key={member.id}
-                                className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-4 flex items-center justify-between hover:border-slate-600 transition-all"
+                                className="bg-muted/50 border border-border rounded-xl p-4 flex items-center justify-between hover:border-accent transition-all"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="size-11 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center font-bold text-white text-lg border border-slate-600">
+                                    <div className="size-11 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg border border-border">
                                         {(member.nickname || member.user.name).charAt(0).toUpperCase()}
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            <span className="font-semibold text-white">
+                                            <span className="font-semibold text-foreground">
                                                 {member.nickname || member.user.name}
                                             </span>
                                             {member.role === 'owner' ? (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">
+                                                <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-500 border-amber-500/30 gap-1">
                                                     <Crown className="size-3" /> Owner
-                                                </span>
+                                                </Badge>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-700 text-slate-300 px-2 py-0.5 rounded-full">
+                                                <Badge variant="secondary" className="text-[10px] gap-1">
                                                     <Shield className="size-3" /> Member
-                                                </span>
+                                                </Badge>
                                             )}
                                         </div>
-                                        <p className="text-xs text-slate-400 mt-0.5">{member.user.email}</p>
+                                        <p className="text-xs text-muted-foreground mt-0.5">{member.user.email}</p>
                                     </div>
                                 </div>
 
@@ -190,7 +196,6 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                             onClick={() => handleOpenEdit(member)}
                                             variant="outline"
                                             size="sm"
-                                            className="border-slate-700 text-slate-300 hover:text-white"
                                         >
                                             Edit
                                         </Button>
@@ -200,7 +205,6 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                                 onClick={() => handleRemoveMember(member.id)}
                                                 variant="destructive"
                                                 size="sm"
-                                                className="bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:bg-rose-500 hover:text-white"
                                             >
                                                 <Trash2 className="size-4" />
                                             </Button>
@@ -210,29 +214,32 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                             </div>
                         ))}
                     </div>
-                </div>
+                </Card>
 
-                {/* Modal Edit Member */}
+                {/* Dialog Edit Member */}
                 {editingMember && (
-                    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md space-y-4">
-                            <h3 className="text-lg font-bold text-white">Edit Anggota Keluarga</h3>
-                            <form onSubmit={handleUpdateMember} className="space-y-4">
+                    <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
+                        <DialogContent className="max-w-md">
+                            <DialogHeader>
+                                <DialogTitle>Edit Anggota Keluarga</DialogTitle>
+                            </DialogHeader>
+
+                            <form onSubmit={handleUpdateMember} className="space-y-4 pt-2">
                                 <div>
-                                    <Label className="text-slate-300">Panggilan / Panggilan Kustom</Label>
+                                    <Label>Panggilan / Nickname</Label>
                                     <Input
                                         type="text"
                                         value={editForm.data.nickname}
                                         onChange={(e) => editForm.setData('nickname', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
+                                        className="mt-1"
                                     />
                                 </div>
                                 <div>
-                                    <Label className="text-slate-300">Peran Dalam Keluarga</Label>
+                                    <Label>Peran Dalam Keluarga</Label>
                                     <select
                                         value={editForm.data.role}
                                         onChange={(e) => editForm.setData('role', e.target.value as any)}
-                                        className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-emerald-500"
+                                        className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm focus:ring-2 focus:ring-ring"
                                     >
                                         <option value="owner">Owner (Pengelola Utama)</option>
                                         <option value="member">Member (Anggota Keluarga)</option>
@@ -243,17 +250,16 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                         type="button"
                                         onClick={() => setEditingMember(null)}
                                         variant="outline"
-                                        className="border-slate-700 text-slate-300"
                                     >
                                         Batal
                                     </Button>
-                                    <Button type="submit" disabled={editForm.processing} className="bg-emerald-500 text-slate-950 font-bold">
+                                    <Button type="submit" disabled={editForm.processing} className="font-bold">
                                         Simpan Perubahan
                                     </Button>
                                 </div>
                             </form>
-                        </div>
-                    </div>
+                        </DialogContent>
+                    </Dialog>
                 )}
             </div>
         </>
