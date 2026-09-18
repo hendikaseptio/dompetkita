@@ -78,7 +78,7 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Keluarga Kita', href: '/family' }]}>
+        <>
             <Head title="Pengaturan Keluarga" />
 
             <div className="p-6 space-y-6 max-w-6xl mx-auto">
@@ -256,6 +256,6 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }

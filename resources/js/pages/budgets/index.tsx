@@ -113,7 +113,7 @@ export default function BudgetsIndex({
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Budgeting', href: '/budgets' }]}>
+        <>
             <Head title="Alokasi Budget Keuangan" />
 
             <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -206,13 +206,12 @@ export default function BudgetsIndex({
                             budgetedItems.map((item) => (
                                 <div
                                     key={item.id}
-                                    className={`bg-slate-900 border rounded-2xl p-5 shadow-lg space-y-3 transition-all ${
-                                        item.is_over_budget
+                                    className={`bg-slate-900 border rounded-2xl p-5 shadow-lg space-y-3 transition-all ${item.is_over_budget
                                             ? 'border-rose-500/60 bg-rose-950/10'
                                             : item.percentage >= 80
-                                            ? 'border-amber-500/60 bg-amber-950/10'
-                                            : 'border-slate-800'
-                                    }`}
+                                                ? 'border-amber-500/60 bg-amber-950/10'
+                                                : 'border-slate-800'
+                                        }`}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
@@ -271,13 +270,12 @@ export default function BudgetsIndex({
                                         </div>
                                         <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
                                             <div
-                                                className={`h-full rounded-full transition-all duration-500 ${
-                                                    item.is_over_budget
+                                                className={`h-full rounded-full transition-all duration-500 ${item.is_over_budget
                                                         ? 'bg-rose-500'
                                                         : item.percentage >= 80
-                                                        ? 'bg-amber-500'
-                                                        : 'bg-emerald-500'
-                                                }`}
+                                                            ? 'bg-amber-500'
+                                                            : 'bg-emerald-500'
+                                                    }`}
                                                 style={{ width: `${Math.min(100, item.percentage)}%` }}
                                             />
                                         </div>
@@ -400,6 +398,6 @@ export default function BudgetsIndex({
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }

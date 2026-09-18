@@ -93,7 +93,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Dompet & Akun', href: '/wallets' }]}>
+        <>
             <Head title="Manajemen Wallet" />
 
             <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -320,6 +320,6 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }

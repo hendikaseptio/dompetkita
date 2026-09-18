@@ -85,7 +85,7 @@ export default function Dashboard({
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Dashboard', href: '/dashboard' }]}>
+        <>
             <Head title="Dashboard Keuangan" />
 
             <div className="p-6 space-y-8 max-w-7xl mx-auto">
@@ -322,13 +322,12 @@ export default function Dashboard({
                                     <div key={tx.id} className="bg-slate-800/40 hover:bg-slate-800/80 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between transition-all">
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className={`p-2.5 rounded-xl ${
-                                                    tx.type === 'income'
-                                                        ? 'bg-blue-500/10 text-blue-400'
-                                                        : tx.type === 'expense'
+                                                className={`p-2.5 rounded-xl ${tx.type === 'income'
+                                                    ? 'bg-blue-500/10 text-blue-400'
+                                                    : tx.type === 'expense'
                                                         ? 'bg-rose-500/10 text-rose-400'
                                                         : 'bg-amber-500/10 text-amber-400'
-                                                }`}
+                                                    }`}
                                             >
                                                 {tx.type === 'income' ? (
                                                     <ArrowUpRight className="size-4" />
@@ -356,13 +355,12 @@ export default function Dashboard({
 
                                         <div className="text-right">
                                             <span
-                                                className={`text-sm font-bold font-mono ${
-                                                    tx.type === 'income'
-                                                        ? 'text-blue-400'
-                                                        : tx.type === 'expense'
+                                                className={`text-sm font-bold font-mono ${tx.type === 'income'
+                                                    ? 'text-blue-400'
+                                                    : tx.type === 'expense'
                                                         ? 'text-rose-400'
                                                         : 'text-amber-400'
-                                                }`}
+                                                    }`}
                                             >
                                                 {tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : ''}
                                                 {formatRp(Number(tx.amount))}
@@ -378,6 +376,6 @@ export default function Dashboard({
                     </div>
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }

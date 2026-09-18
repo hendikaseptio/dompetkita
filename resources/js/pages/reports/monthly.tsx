@@ -67,7 +67,7 @@ export default function MonthlyReport({
     const monthName = new Date(2026, month - 1, 1).toLocaleString('id-ID', { month: 'long' });
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Laporan Bulanan', href: '/reports/monthly' }]}>
+        <>
             <Head title={`Laporan Keuangan ${monthName} ${year}`} />
 
             <div className="p-6 space-y-8 max-w-6xl mx-auto print:p-0 print:bg-white print:text-black">
@@ -255,6 +255,6 @@ export default function MonthlyReport({
                     </div>
                 </div>
             </div>
-        </AppLayout>
+        </>
     );
 }

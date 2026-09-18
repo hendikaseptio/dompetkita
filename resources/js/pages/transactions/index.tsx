@@ -158,7 +158,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Transaksi', href: '/transactions' }]}>
+        <>
             <Head title="Histori Transaksi" />
 
             <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -268,13 +268,12 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                             <td className="p-4">
                                                 <div className="flex items-center gap-2.5">
                                                     <div
-                                                        className={`p-2 rounded-lg ${
-                                                            tx.type === 'income'
+                                                        className={`p-2 rounded-lg ${tx.type === 'income'
                                                                 ? 'bg-blue-500/10 text-blue-400'
                                                                 : tx.type === 'expense'
-                                                                ? 'bg-rose-500/10 text-rose-400'
-                                                                : 'bg-amber-500/10 text-amber-400'
-                                                        }`}
+                                                                    ? 'bg-rose-500/10 text-rose-400'
+                                                                    : 'bg-amber-500/10 text-amber-400'
+                                                            }`}
                                                     >
                                                         {tx.type === 'income' ? (
                                                             <ArrowUpRight className="size-4" />
@@ -324,8 +323,8 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                                         tx.type === 'income'
                                                             ? 'text-blue-400'
                                                             : tx.type === 'expense'
-                                                            ? 'text-rose-400'
-                                                            : 'text-amber-400'
+                                                                ? 'text-rose-400'
+                                                                : 'text-amber-400'
                                                     }
                                                 >
                                                     {tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : ''}
@@ -380,27 +379,24 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 <button
                                     type="button"
                                     onClick={() => addForm.setData('type', 'expense')}
-                                    className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                        addForm.data.type === 'expense' ? 'bg-rose-500 text-white shadow' : 'text-slate-400'
-                                    }`}
+                                    className={`py-1.5 rounded-lg text-xs font-bold transition-all ${addForm.data.type === 'expense' ? 'bg-rose-500 text-white shadow' : 'text-slate-400'
+                                        }`}
                                 >
                                     Pengeluaran
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => addForm.setData('type', 'income')}
-                                    className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                        addForm.data.type === 'income' ? 'bg-blue-500 text-white shadow' : 'text-slate-400'
-                                    }`}
+                                    className={`py-1.5 rounded-lg text-xs font-bold transition-all ${addForm.data.type === 'income' ? 'bg-blue-500 text-white shadow' : 'text-slate-400'
+                                        }`}
                                 >
                                     Pemasukan
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => addForm.setData('type', 'transfer')}
-                                    className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                        addForm.data.type === 'transfer' ? 'bg-amber-500 text-white shadow' : 'text-slate-400'
-                                    }`}
+                                    className={`py-1.5 rounded-lg text-xs font-bold transition-all ${addForm.data.type === 'transfer' ? 'bg-amber-500 text-white shadow' : 'text-slate-400'
+                                        }`}
                                 >
                                     Transfer
                                 </button>
@@ -633,6 +629,6 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </>
     );
 }

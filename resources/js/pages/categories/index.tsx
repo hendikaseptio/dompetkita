@@ -72,7 +72,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
     };
 
     return (
-        <AppLayout breadcrumbs={[{ title: 'Kategori', href: '/categories' }]}>
+        <>
             <Head title="Manajemen Kategori" />
 
             <div className="p-6 space-y-6 max-w-6xl mx-auto">
@@ -106,11 +106,10 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                     <button
                         type="button"
                         onClick={() => setActiveTab('expense')}
-                        className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                            activeTab === 'expense'
-                                ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                                : 'text-slate-400 hover:text-white'
-                        }`}
+                        className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'expense'
+                            ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30'
+                            : 'text-slate-400 hover:text-white'
+                            }`}
                     >
                         <ArrowDownRight className="size-4" />
                         Pengeluaran ({categories.filter((c) => c.type === 'expense').length})
@@ -118,11 +117,10 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                     <button
                         type="button"
                         onClick={() => setActiveTab('income')}
-                        className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
-                            activeTab === 'income'
-                                ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                                : 'text-slate-400 hover:text-white'
-                        }`}
+                        className={`px-4 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'income'
+                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                            : 'text-slate-400 hover:text-white'
+                            }`}
                     >
                         <ArrowUpRight className="size-4" />
                         Pemasukan ({categories.filter((c) => c.type === 'income').length})
@@ -282,6 +280,6 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                     </div>
                 )}
             </div>
-        </AppLayout>
+        </ >
     );
 }
