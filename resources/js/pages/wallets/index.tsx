@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CurrencyInput } from '@/components/ui/currency-input';
 
 interface Wallet {
     id: number;
@@ -221,13 +222,12 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                 </div>
 
                                 <div>
-                                    <Label className="text-slate-300">Saldo Awal (Rp)</Label>
-                                    <Input
-                                        type="number"
+                                    <Label className="text-slate-300">Saldo Awal</Label>
+                                    <CurrencyInput
                                         placeholder="0"
                                         value={addForm.data.balance}
-                                        onChange={(e) => addForm.setData('balance', e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white mt-1"
+                                        onChangeValue={(val) => addForm.setData('balance', val)}
+                                        className="bg-slate-800 border-slate-700 text-white mt-1 font-bold text-lg"
                                         required
                                     />
                                 </div>

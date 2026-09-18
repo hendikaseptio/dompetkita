@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Budget;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Wallet;

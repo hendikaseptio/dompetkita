@@ -2,6 +2,7 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
+import { MobileFloatingDock } from '@/components/mobile-floating-dock';
 import type { AppLayoutProps } from '@/types';
 
 export default function AppSidebarLayout({
@@ -11,10 +12,11 @@ export default function AppSidebarLayout({
     return (
         <AppShell variant="sidebar">
             <AppSidebar />
-            <AppContent variant="sidebar" className="min-w-0 overflow-x-clip">
+            <AppContent variant="sidebar" className="min-w-0 overflow-x-clip pb-24 md:pb-6">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}
             </AppContent>
+            <MobileFloatingDock />
         </AppShell>
     );
 }

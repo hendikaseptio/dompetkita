@@ -18,6 +18,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CurrencyInput } from '@/components/ui/currency-input';
 
 interface Wallet {
     id: number;
@@ -404,12 +405,11 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
 
                             <form onSubmit={handleAddSubmit} className="space-y-4">
                                 <div>
-                                    <Label className="text-slate-300">Jumlah Transaksi (Rp)</Label>
-                                    <Input
-                                        type="number"
+                                    <Label className="text-slate-300">Jumlah Transaksi</Label>
+                                    <CurrencyInput
                                         placeholder="0"
                                         value={addForm.data.amount}
-                                        onChange={(e) => addForm.setData('amount', e.target.value)}
+                                        onChangeValue={(val) => addForm.setData('amount', val)}
                                         className="bg-slate-800 border-slate-700 text-white text-lg font-bold mt-1"
                                         required
                                     />
@@ -541,11 +541,10 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                             <h3 className="text-lg font-bold text-white">Edit Transaksi</h3>
                             <form onSubmit={handleEditSubmit} className="space-y-4">
                                 <div>
-                                    <Label className="text-slate-300">Jumlah Transaksi (Rp)</Label>
-                                    <Input
-                                        type="number"
+                                    <Label className="text-slate-300">Jumlah Transaksi</Label>
+                                    <CurrencyInput
                                         value={editForm.data.amount}
-                                        onChange={(e) => editForm.setData('amount', e.target.value)}
+                                        onChangeValue={(val) => editForm.setData('amount', val)}
                                         className="bg-slate-800 border-slate-700 text-white text-lg font-bold mt-1"
                                         required
                                     />

@@ -5,6 +5,7 @@ import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { CurrencyInput } from '@/components/ui/currency-input';
 
 interface Category {
     id: number;
@@ -369,13 +370,12 @@ export default function BudgetsIndex({
                                 </div>
 
                                 <div>
-                                    <Label className="text-slate-300">Batas Pengeluaran Bulanan (Limit Rp)</Label>
-                                    <Input
-                                        type="number"
-                                        placeholder="Contoh: 2000000"
+                                    <Label className="text-slate-300">Batas Pengeluaran Bulanan (Limit)</Label>
+                                    <CurrencyInput
+                                        placeholder="0"
                                         value={limitInput}
-                                        onChange={(e) => setLimitInput(e.target.value)}
-                                        className="bg-slate-800 border-slate-700 text-white font-bold mt-1"
+                                        onChangeValue={(val) => setLimitInput(val)}
+                                        className="bg-slate-800 border-slate-700 text-white font-bold text-lg mt-1"
                                         required
                                     />
                                 </div>
