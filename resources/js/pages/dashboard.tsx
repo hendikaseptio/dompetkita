@@ -14,6 +14,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CategoryIcon } from '@/components/category-icon';
 import { formatDateHuman, formatRp } from '@/lib/formatters';
 
 interface Wallet {
@@ -31,7 +32,7 @@ interface Transaction {
     note: string | null;
     creator?: { name: string };
     payer?: { name: string };
-    category?: { name: string; color: string | null };
+    category?: { name: string; color: string | null; icon: string | null };
     wallet_from?: { name: string };
     wallet_to?: { name: string };
 }
@@ -312,20 +313,16 @@ export default function Dashboard({
                                     <div key={tx.id} className="bg-muted/40 hover:bg-muted/80 p-3.5 rounded-xl border border-border flex items-center justify-between transition-all">
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className={`p-2.5 rounded-xl ${
-                                                    tx.type === 'income'
-                                                        ? 'bg-blue-500/10 text-blue-500'
-                                                        : tx.type === 'expense'
-                                                        ? 'bg-rose-500/10 text-rose-500'
-                                                        : 'bg-amber-500/10 text-amber-500'
-                                                }`}
+                                                className="p-2 rounded-lg shrink-0 flex items-center justify-center border border-border"
+                                                style={{
+                                                    backgroundColor: tx.category?.color ? `${tx.category.color}20` : 'var(--muted)',
+                                                    borderColor: tx.category?.color ? `${tx.category.color}40` : 'var(--border)',
+                                                }}
                                             >
-                                                {tx.type === 'income' ? (
-                                                    <ArrowUpRight className="size-4" />
-                                                ) : tx.type === 'expense' ? (
-                                                    <ArrowDownRight className="size-4" />
+                                                {tx.type === 'transfer' ? (
+                                                    <Receipt className="size-4 text-amber-500" />
                                                 ) : (
-                                                    <Receipt className="size-4" />
+                                                    <CategoryIcon name={tx.category?.icon} color={tx.category?.color} className="size-4" />
                                                 )}
                                             </div>
 

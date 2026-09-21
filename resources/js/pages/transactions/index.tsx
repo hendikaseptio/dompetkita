@@ -32,6 +32,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { CategoryIcon } from '@/components/category-icon';
 import { formatDateHuman, formatDateWithDay, formatRp } from '@/lib/formatters';
 
 interface Wallet {
@@ -43,6 +44,8 @@ interface Category {
     id: number;
     name: string;
     type: string;
+    icon?: string | null;
+    color?: string | null;
 }
 
 interface Member {
@@ -62,7 +65,7 @@ interface Transaction {
     wallet_to_id: number | null;
     creator?: { id: number; name: string };
     payer?: { id: number; name: string };
-    category?: { id: number; name: string; color: string | null };
+    category?: { id: number; name: string; color: string | null; icon: string | null };
     wallet_from?: { id: number; name: string };
     wallet_to?: { id: number; name: string };
 }
@@ -314,20 +317,16 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                             <td className="p-4">
                                                 <div className="flex items-center gap-2.5">
                                                     <div
-                                                        className={`p-2 rounded-lg ${
-                                                            tx.type === 'income'
-                                                                ? 'bg-blue-500/10 text-blue-500'
-                                                                : tx.type === 'expense'
-                                                                ? 'bg-rose-500/10 text-rose-500'
-                                                                : 'bg-amber-500/10 text-amber-500'
-                                                        }`}
+                                                        className="p-2 rounded-lg shrink-0 flex items-center justify-center border border-border"
+                                                        style={{
+                                                            backgroundColor: tx.category?.color ? `${tx.category.color}20` : 'var(--muted)',
+                                                            borderColor: tx.category?.color ? `${tx.category.color}40` : 'var(--border)',
+                                                        }}
                                                     >
-                                                        {tx.type === 'income' ? (
-                                                            <ArrowUpRight className="size-4" />
-                                                        ) : tx.type === 'expense' ? (
-                                                            <ArrowDownRight className="size-4" />
+                                                        {tx.type === 'transfer' ? (
+                                                            <ArrowLeftRight className="size-4 text-amber-500" />
                                                         ) : (
-                                                            <ArrowLeftRight className="size-4" />
+                                                            <CategoryIcon name={tx.category?.icon} color={tx.category?.color} className="size-4" />
                                                         )}
                                                     </div>
                                                     <div>
@@ -423,20 +422,16 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 <div className="flex items-start justify-between gap-3 border-b border-border pb-2.5">
                                     <div className="flex items-center gap-2.5 min-w-0">
                                         <div
-                                            className={`p-2 rounded-lg shrink-0 ${
-                                                tx.type === 'income'
-                                                    ? 'bg-blue-500/10 text-blue-500 dark:bg-blue-500/20'
-                                                    : tx.type === 'expense'
-                                                    ? 'bg-rose-500/10 text-rose-500 dark:bg-rose-500/20'
-                                                    : 'bg-amber-500/10 text-amber-500 dark:bg-amber-500/20'
-                                            }`}
+                                            className="p-2 rounded-lg shrink-0 flex items-center justify-center border border-border"
+                                            style={{
+                                                backgroundColor: tx.category?.color ? `${tx.category.color}20` : 'var(--muted)',
+                                                borderColor: tx.category?.color ? `${tx.category.color}40` : 'var(--border)',
+                                            }}
                                         >
-                                            {tx.type === 'income' ? (
-                                                <ArrowUpRight className="size-4" />
-                                            ) : tx.type === 'expense' ? (
-                                                <ArrowDownRight className="size-4" />
+                                            {tx.type === 'transfer' ? (
+                                                <ArrowLeftRight className="size-4 text-amber-500" />
                                             ) : (
-                                                <ArrowLeftRight className="size-4" />
+                                                <CategoryIcon name={tx.category?.icon} color={tx.category?.color} className="size-4" />
                                             )}
                                         </div>
                                         <div className="min-w-0">

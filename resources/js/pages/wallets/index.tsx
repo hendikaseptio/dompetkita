@@ -3,7 +3,7 @@ import { CreditCard, DollarSign, Edit2, Landmark, Plus, Smartphone, Trash2, Wall
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { CurrencyInput } from '@/components/ui/currency-input';
 import {
     Dialog,
@@ -13,6 +13,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { formatRp } from '@/lib/formatters';
 
 interface Wallet {
@@ -97,37 +104,41 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
         <>
             <Head title="Manajemen Wallet" />
 
-            <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
+            <div className="p-4 md:p-6 pb-28 md:pb-8 space-y-6 max-w-7xl mx-auto">
                 {/* Top Banner */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                            <WalletIcon className="size-6 text-emerald-500" />
-                            Dompet & Akun Keuangan
-                        </h1>
-                        <p className="text-sm text-muted-foreground mt-1">
-                            Kelola seluruh sumber uang (Tunai, E-Wallet, Rekening Bank, Tabungan Keluarga).
-                        </p>
-                    </div>
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2 flex-wrap">
+                                <WalletIcon className="size-5 sm:size-6 text-emerald-500 shrink-0" />
+                                <span>Dompet &amp; Akun Keuangan</span>
+                            </h1>
+                            <p className="text-sm text-muted-foreground mt-1 leading-snug">
+                                Kelola seluruh sumber uang (Tunai, E-Wallet, Rekening Bank, Tabungan Keluarga).
+                            </p>
+                        </div>
 
-                    <Button
-                        type="button"
-                        onClick={() => setIsAddModalOpen(true)}
-                        className="font-bold gap-2 shadow-sm"
-                    >
-                        <Plus className="size-4" />
-                        Tambah Dompet Baru
-                    </Button>
+                        <Button
+                            type="button"
+                            onClick={() => setIsAddModalOpen(true)}
+                            className="font-bold gap-1.5 shadow-sm shrink-0 text-sm"
+                            size="sm"
+                        >
+                            <Plus className="size-4" />
+                            <span className="hidden sm:inline">Tambah Dompet Baru</span>
+                            <span className="sm:hidden">Tambah</span>
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Total Balance Card */}
-                <Card className="shadow-sm border-border p-6 flex flex-row items-center justify-between">
-                    <div>
+                <Card className="shadow-sm border-border p-5 flex flex-row items-center justify-between gap-3">
+                    <div className="min-w-0">
                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Saldo Seluruh Wallet</span>
-                        <div className="text-3xl font-black text-emerald-500 mt-1">{formatRp(totalBalance)}</div>
+                        <div className="text-2xl sm:text-3xl font-black text-emerald-500 mt-1 truncate">{formatRp(totalBalance)}</div>
                     </div>
-                    <Badge variant="outline" className="text-xs px-3 py-1 font-semibold">
-                        {wallets.length} Dompet Aktif
+                    <Badge variant="outline" className="text-xs px-2.5 py-1 font-semibold shrink-0">
+                        {wallets.length} Dompet
                     </Badge>
                 </Card>
 
@@ -181,9 +192,9 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                 )}
                             </div>
 
-                            <div className="pt-4 border-t border-border flex items-end justify-between">
-                                <span className="text-xs text-muted-foreground">Saldo Saat Ini</span>
-                                <span className="text-xl font-bold font-mono text-foreground">{formatRp(Number(w.balance))}</span>
+                            <div className="pt-4 border-t border-border flex items-end justify-between gap-2">
+                                <span className="text-xs text-muted-foreground shrink-0">Saldo Saat Ini</span>
+                                <span className="text-base sm:text-xl font-bold font-mono text-foreground truncate text-right">{formatRp(Number(w.balance))}</span>
                             </div>
                         </Card>
                     ))}
@@ -191,7 +202,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
 
                 {/* Dialog Add Wallet */}
                 <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-                    <DialogContent className="max-w-md">
+                    <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Tambah Dompet Baru</DialogTitle>
                         </DialogHeader>
@@ -211,16 +222,20 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
 
                             <div>
                                 <Label>Jenis Dompet</Label>
-                                <select
+                                <Select
                                     value={addForm.data.type}
-                                    onChange={(e) => addForm.setData('type', e.target.value as any)}
-                                    className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm focus:ring-2 focus:ring-ring"
+                                    onValueChange={(val) => addForm.setData('type', val as any)}
                                 >
-                                    <option value="cash">Tunai (Cash)</option>
-                                    <option value="digital">Digital / E-Wallet (GoPay, OVO, ShopeePay)</option>
-                                    <option value="bank">Rekening Bank (BCA, Mandiri, BRI, dll)</option>
-                                    <option value="saving">Tabungan Khusus (Tabungan Nikah, Pendidikan)</option>
-                                </select>
+                                    <SelectTrigger className="mt-1">
+                                        <SelectValue placeholder="Pilih jenis dompet" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="cash">Tunai (Cash)</SelectItem>
+                                        <SelectItem value="digital">Digital / E-Wallet (GoPay, OVO, ShopeePay)</SelectItem>
+                                        <SelectItem value="bank">Rekening Bank (BCA, Mandiri, BRI, dll)</SelectItem>
+                                        <SelectItem value="saving">Tabungan Khusus (Tabungan Nikah, Pendidikan)</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div>
@@ -264,7 +279,7 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                 {/* Dialog Edit Wallet */}
                 {editingWallet && (
                     <Dialog open={!!editingWallet} onOpenChange={() => setEditingWallet(null)}>
-                        <DialogContent className="max-w-md">
+                        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Edit Dompet</DialogTitle>
                             </DialogHeader>
@@ -283,16 +298,20 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
 
                                 <div>
                                     <Label>Jenis Dompet</Label>
-                                    <select
+                                    <Select
                                         value={editForm.data.type}
-                                        onChange={(e) => editForm.setData('type', e.target.value as any)}
-                                        className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
+                                        onValueChange={(val) => editForm.setData('type', val as any)}
                                     >
-                                        <option value="cash">Tunai (Cash)</option>
-                                        <option value="digital">Digital / E-Wallet</option>
-                                        <option value="bank">Rekening Bank</option>
-                                        <option value="saving">Tabungan Khusus</option>
-                                    </select>
+                                        <SelectTrigger className="mt-1">
+                                            <SelectValue placeholder="Pilih jenis dompet" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="cash">Tunai (Cash)</SelectItem>
+                                            <SelectItem value="digital">Digital / E-Wallet</SelectItem>
+                                            <SelectItem value="bank">Rekening Bank</SelectItem>
+                                            <SelectItem value="saving">Tabungan Khusus</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
 
                                 <div>

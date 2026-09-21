@@ -1,9 +1,11 @@
 import { Head, useForm } from '@inertiajs/react';
 import { ArrowDownRight, ArrowUpRight, Edit2, Plus, Tag, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
+import { CategoryIcon } from '@/components/category-icon';
+import { IconPicker } from '@/components/icon-picker';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import {
     Dialog,
     DialogContent,
@@ -26,6 +28,19 @@ interface CategoriesProps {
     categories: Category[];
 }
 
+const PRESET_COLORS = [
+    '#EF4444',
+    '#F97316',
+    '#F59E0B',
+    '#10B981',
+    '#06B6D4',
+    '#3B82F6',
+    '#6366F1',
+    '#8B5CF6',
+    '#EC4899',
+    '#64748B',
+];
+
 export default function CategoriesIndex({ categories }: CategoriesProps) {
     const [activeTab, setActiveTab] = useState<'income' | 'expense'>('expense');
     const [isAddOpen, setIsAddOpen] = useState(false);
@@ -34,11 +49,13 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
     const addForm = useForm({
         name: '',
         type: activeTab,
+        icon: 'ShoppingBag',
         color: '#10B981',
     });
 
     const editForm = useForm({
         name: '',
+        icon: 'Tag',
         color: '#10B981',
     });
 
@@ -60,6 +77,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
         setEditingCat(cat);
         editForm.setData({
             name: cat.name,
+            icon: cat.icon || 'Tag',
             color: cat.color || '#10B981',
         });
     };
@@ -82,13 +100,13 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
         <>
             <Head title="Manajemen Kategori" />
 
-            <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
+            <div className="p-4 md:p-6 pb-28 md:pb-8 space-y-6 max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
                             <Tag className="size-6 text-emerald-500" />
-                            Kategori Pemasukan & Pengeluaran
+                            Kategori Pemasukan &amp; Pengeluaran
                         </h1>
                         <p className="text-sm text-muted-foreground mt-1">
                             Atur klasifikasi jenis transaksi keuangan keluarga Anda.
@@ -141,9 +159,14 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                         >
                             <div className="flex items-center gap-3">
                                 <div
-                                    className="size-4 rounded-full border border-border shadow-sm"
-                                    style={{ backgroundColor: cat.color || '#10B981' }}
-                                />
+                                    className="size-9 rounded-xl flex items-center justify-center border border-border shrink-0"
+                                    style={{
+                                        backgroundColor: cat.color ? `${cat.color}20` : 'var(--muted)',
+                                        borderColor: cat.color ? `${cat.color}40` : 'var(--border)',
+                                    }}
+                                >
+                                    <CategoryIcon name={cat.icon} color={cat.color} className="size-5" />
+                                </div>
                                 <div>
                                     <h4 className="font-semibold text-foreground text-sm">{cat.name}</h4>
                                     {cat.is_default && (
@@ -174,11 +197,17 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                             </div>
                         </Card>
                     ))}
+
+                    {filteredCategories.length === 0 && (
+                        <Card className="col-span-full p-8 text-center text-muted-foreground text-sm border-border">
+                            Belum ada kategori untuk jenis ini. Klik "Tambah Kategori Baru" di atas.
+                        </Card>
+                    )}
                 </div>
 
                 {/* Dialog Add Category */}
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                    <DialogContent className="max-w-md">
+                    <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Tambah Kategori Baru</DialogTitle>
                         </DialogHeader>
@@ -208,16 +237,36 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                 />
                             </div>
 
+                            {/* Icon Picker Component */}
+                            <IconPicker
+                                value={addForm.data.icon}
+                                color={addForm.data.color}
+                                onChange={(iconName) => addForm.setData('icon', iconName)}
+                            />
+
+                            {/* Color Selector */}
                             <div>
-                                <Label>Warna Indikator</Label>
-                                <div className="flex items-center gap-3 mt-1.5">
-                                    <Input
+                                <Label className="text-xs font-semibold">Warna Indikator</Label>
+                                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                    {PRESET_COLORS.map((c) => (
+                                        <button
+                                            key={c}
+                                            type="button"
+                                            onClick={() => addForm.setData('color', c)}
+                                            className={`size-7 rounded-full transition-transform border border-border ${
+                                                addForm.data.color === c ? 'scale-125 ring-2 ring-primary ring-offset-2' : 'hover:scale-110'
+                                            }`}
+                                            style={{ backgroundColor: c }}
+                                        />
+                                    ))}
+                                    <input
                                         type="color"
                                         value={addForm.data.color}
                                         onChange={(e) => addForm.setData('color', e.target.value)}
-                                        className="size-10 p-1 bg-background border-input rounded-lg cursor-pointer"
+                                        className="size-7 rounded-full cursor-pointer border border-border p-0 bg-transparent"
+                                        title="Pilih Warna Custom"
                                     />
-                                    <span className="text-xs text-muted-foreground font-mono">{addForm.data.color}</span>
+                                    <span className="text-xs text-muted-foreground font-mono ml-1">{addForm.data.color}</span>
                                 </div>
                             </div>
 
@@ -240,9 +289,9 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                 {/* Dialog Edit Category */}
                 {editingCat && (
                     <Dialog open={!!editingCat} onOpenChange={() => setEditingCat(null)}>
-                        <DialogContent className="max-w-md">
+                        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
-                                <DialogTitle>Edit Kategori</DialogTitle>
+                                <DialogTitle>Edit Kategori "{editingCat.name}"</DialogTitle>
                             </DialogHeader>
 
                             <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
@@ -257,16 +306,36 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                     />
                                 </div>
 
+                                {/* Icon Picker Component */}
+                                <IconPicker
+                                    value={editForm.data.icon}
+                                    color={editForm.data.color}
+                                    onChange={(iconName) => editForm.setData('icon', iconName)}
+                                />
+
+                                {/* Color Selector */}
                                 <div>
-                                    <Label>Warna Indikator</Label>
-                                    <div className="flex items-center gap-3 mt-1.5">
-                                        <Input
+                                    <Label className="text-xs font-semibold">Warna Indikator</Label>
+                                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                        {PRESET_COLORS.map((c) => (
+                                            <button
+                                                key={c}
+                                                type="button"
+                                                onClick={() => editForm.setData('color', c)}
+                                                className={`size-7 rounded-full transition-transform border border-border ${
+                                                    editForm.data.color === c ? 'scale-125 ring-2 ring-primary ring-offset-2' : 'hover:scale-110'
+                                                }`}
+                                                style={{ backgroundColor: c }}
+                                            />
+                                        ))}
+                                        <input
                                             type="color"
                                             value={editForm.data.color}
                                             onChange={(e) => editForm.setData('color', e.target.value)}
-                                            className="size-10 p-1 bg-background border-input rounded-lg cursor-pointer"
+                                            className="size-7 rounded-full cursor-pointer border border-border p-0 bg-transparent"
+                                            title="Pilih Warna Custom"
                                         />
-                                        <span className="text-xs text-muted-foreground font-mono">{editForm.data.color}</span>
+                                        <span className="text-xs text-muted-foreground font-mono ml-1">{editForm.data.color}</span>
                                     </div>
                                 </div>
 

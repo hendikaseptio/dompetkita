@@ -26,6 +26,11 @@ class BudgetController extends Controller
             ->orderBy('name')
             ->get();
 
+        $allCategories = Category::where('family_id', $family->id)
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get();
+
         $budgets = Budget::where('family_id', $family->id)
             ->where('month', $month)
             ->where('year', $year)
@@ -81,6 +86,7 @@ class BudgetController extends Controller
             'month' => $month,
             'year' => $year,
             'expenseCategories' => $expenseCategories,
+            'allCategories' => $allCategories,
             'summary' => [
                 'totalLimit' => $totalBudgetLimit,
                 'totalBudgetedSpent' => $totalBudgetedSpent,
