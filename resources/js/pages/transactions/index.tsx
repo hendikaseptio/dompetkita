@@ -7,6 +7,7 @@ import {
     Filter,
     Plus,
     Receipt,
+    RotateCcw,
     Search,
     Trash2,
 } from 'lucide-react';
@@ -24,6 +25,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { formatDateHuman, formatDateWithDay, formatRp } from '@/lib/formatters';
 
 interface Wallet {
@@ -156,19 +164,21 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
         }
     };
 
+    const hasActiveFilters = Boolean(typeFilter || filters.wallet_id || filters.category_id || search);
+
     return (
         <>
             <Head title="Histori Transaksi" />
 
-            <div className="p-4 md:p-6 space-y-6 max-w-7xl mx-auto">
+            <div className="p-4 sm:p-6 pb-28 md:pb-10 space-y-6 max-w-7xl mx-auto">
                 {/* Top Bar */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                            <Receipt className="size-6 text-emerald-500" />
+                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                            <Receipt className="size-6 text-primary" />
                             Catatan Transaksi Keuangan
                         </h1>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                             Histori lengkap pengeluaran, pemasukan, dan transfer antar wallet keluarga.
                         </p>
                     </div>
@@ -176,7 +186,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                     <Button
                         type="button"
                         onClick={() => setIsAddOpen(true)}
-                        className="font-bold gap-2 shadow-sm"
+                        className="w-full sm:w-auto font-semibold gap-2 shadow-xs shrink-0"
                     >
                         <Plus className="size-4" />
                         Tambah Transaksi
@@ -184,68 +194,103 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                 </div>
 
                 {/* Filter Toolbar */}
-                <Card className="shadow-sm border-border p-4">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <div className="flex items-center gap-2 w-full md:w-auto">
-                            <div className="relative w-full md:w-64">
-                                <Search className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                                <Input
-                                    type="text"
-                                    placeholder="Cari catatan..."
-                                    value={search}
-                                    onChange={(e) => setSearch(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleFilterChange('search', search)}
-                                    className="pl-9 text-sm"
-                                />
-                            </div>
-
-                            <select
-                                value={typeFilter}
-                                onChange={(e) => {
-                                    setTypeFilter(e.target.value);
-                                    handleFilterChange('type', e.target.value);
-                                }}
-                                className="bg-background border border-input text-foreground rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring"
-                            >
-                                <option value="">Semua Jenis</option>
-                                <option value="expense">Pengeluaran</option>
-                                <option value="income">Pemasukan</option>
-                                <option value="transfer">Transfer</option>
-                            </select>
+                <Card className="shadow-xs border-border p-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+                        <div className="relative w-full">
+                            <Search className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                            <Input
+                                type="text"
+                                placeholder="Cari catatan..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleFilterChange('search', search)}
+                                className="pl-9 text-sm w-full"
+                            />
                         </div>
 
-                        <div className="flex items-center gap-2 w-full md:w-auto">
-                            <select
-                                value={filters.wallet_id || ''}
-                                onChange={(e) => handleFilterChange('wallet_id', e.target.value)}
-                                className="bg-background border border-input text-foreground rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring"
-                            >
-                                <option value="">Semua Wallet</option>
+                        <Select
+                            value={typeFilter || 'all'}
+                            onValueChange={(val) => {
+                                const nextVal = val === 'all' ? '' : val;
+                                setTypeFilter(nextVal);
+                                handleFilterChange('type', nextVal);
+                            }}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Semua Jenis" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Semua Jenis</SelectItem>
+                                <SelectItem value="expense">Pengeluaran</SelectItem>
+                                <SelectItem value="income">Pemasukan</SelectItem>
+                                <SelectItem value="transfer">Transfer</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        <Select
+                            value={filters.wallet_id ? String(filters.wallet_id) : 'all'}
+                            onValueChange={(val) => {
+                                const nextVal = val === 'all' ? '' : val;
+                                handleFilterChange('wallet_id', nextVal);
+                            }}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Semua Wallet" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Semua Wallet</SelectItem>
                                 {wallets.map((w) => (
-                                    <option key={w.id} value={w.id}>
+                                    <SelectItem key={w.id} value={String(w.id)}>
                                         {w.name}
-                                    </option>
+                                    </SelectItem>
                                 ))}
-                            </select>
+                            </SelectContent>
+                        </Select>
 
-                            <select
-                                value={filters.category_id || ''}
-                                onChange={(e) => handleFilterChange('category_id', e.target.value)}
-                                className="bg-background border border-input text-foreground rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-ring"
-                            >
-                                <option value="">Semua Kategori</option>
+                        <Select
+                            value={filters.category_id ? String(filters.category_id) : 'all'}
+                            onValueChange={(val) => {
+                                const nextVal = val === 'all' ? '' : val;
+                                handleFilterChange('category_id', nextVal);
+                            }}
+                        >
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Semua Kategori" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Semua Kategori</SelectItem>
                                 {categories.map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.name} ({c.type})
-                                    </option>
+                                    <SelectItem key={c.id} value={String(c.id)}>
+                                        {c.name} ({c.type === 'income' ? 'Pemasukan' : 'Pengeluaran'})
+                                    </SelectItem>
                                 ))}
-                            </select>
-                        </div>
+                            </SelectContent>
+                        </Select>
                     </div>
+
+                    {hasActiveFilters && (
+                        <div className="mt-3 pt-3 border-t border-border flex justify-end">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                    setTypeFilter('');
+                                    setSearch('');
+                                    router.get('/transactions', {}, { preserveState: true, replace: true });
+                                }}
+                                className="text-xs text-muted-foreground hover:text-foreground gap-1.5"
+                            >
+                                <RotateCcw className="size-3.5" />
+                                Reset Filter
+                            </Button>
+                        </div>
+                    )}
                 </Card>
 
                 {/* Desktop View Table (hidden on mobile) */}
-                <Card className="shadow-sm border-border hidden md:block overflow-hidden">
+                <Card className="shadow-xs border-border hidden md:block overflow-hidden">
+
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
@@ -374,16 +419,16 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                 <div className="block md:hidden space-y-3">
                     {transactions.data.length > 0 ? (
                         transactions.data.map((tx) => (
-                            <Card key={tx.id} className="shadow-sm border-border p-4 space-y-3">
-                                <div className="flex items-center justify-between border-b border-border pb-2">
-                                    <div className="flex items-center gap-2">
+                            <Card key={tx.id} className="shadow-xs border-border p-4 space-y-3">
+                                <div className="flex items-start justify-between gap-3 border-b border-border pb-2.5">
+                                    <div className="flex items-center gap-2.5 min-w-0">
                                         <div
-                                            className={`p-2 rounded-lg ${
+                                            className={`p-2 rounded-lg shrink-0 ${
                                                 tx.type === 'income'
-                                                    ? 'bg-blue-500/10 text-blue-500'
+                                                    ? 'bg-blue-500/10 text-blue-500 dark:bg-blue-500/20'
                                                     : tx.type === 'expense'
-                                                    ? 'bg-rose-500/10 text-rose-500'
-                                                    : 'bg-amber-500/10 text-amber-500'
+                                                    ? 'bg-rose-500/10 text-rose-500 dark:bg-rose-500/20'
+                                                    : 'bg-amber-500/10 text-amber-500 dark:bg-amber-500/20'
                                             }`}
                                         >
                                             {tx.type === 'income' ? (
@@ -394,23 +439,23 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                                 <ArrowLeftRight className="size-4" />
                                             )}
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-foreground text-sm">
+                                        <div className="min-w-0">
+                                            <h4 className="font-semibold text-foreground text-sm truncate">
                                                 {tx.category?.name || (tx.type === 'transfer' ? 'Transfer' : 'Transaksi')}
                                             </h4>
-                                            <span className="text-[11px] text-muted-foreground font-medium">
+                                            <span className="text-[11px] text-muted-foreground font-medium block">
                                                 {formatDateHuman(tx.transaction_date)}
                                             </span>
                                         </div>
                                     </div>
 
                                     <span
-                                        className={`text-base font-bold font-mono ${
+                                        className={`text-sm sm:text-base font-bold font-mono shrink-0 ${
                                             tx.type === 'income'
-                                                ? 'text-blue-500'
+                                                ? 'text-blue-600 dark:text-blue-400'
                                                 : tx.type === 'expense'
-                                                ? 'text-rose-500'
-                                                : 'text-amber-500'
+                                                ? 'text-rose-600 dark:text-rose-400'
+                                                : 'text-amber-600 dark:text-amber-400'
                                         }`}
                                     >
                                         {tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : ''}
@@ -418,14 +463,17 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     </span>
                                 </div>
 
-                                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                                    <div>
+                                <div className="flex items-center justify-between text-xs text-muted-foreground gap-2">
+                                    <div className="space-y-0.5 min-w-0">
                                         <span>Dibayar: <strong className="text-foreground font-semibold">{tx.payer?.name || '-'}</strong></span>
-                                        {tx.wallet_from && <span className="block mt-0.5">Wallet: {tx.wallet_from.name}</span>}
-                                        {tx.wallet_to && tx.type === 'income' && <span className="block mt-0.5">Wallet: {tx.wallet_to.name}</span>}
+                                        {tx.wallet_from && <span className="block truncate">Wallet: {tx.wallet_from.name}</span>}
+                                        {tx.wallet_to && tx.type === 'income' && <span className="block truncate">Wallet: {tx.wallet_to.name}</span>}
+                                        {tx.type === 'transfer' && tx.wallet_from && tx.wallet_to && (
+                                            <span className="block truncate">{tx.wallet_from.name} &rarr; {tx.wallet_to.name}</span>
+                                        )}
                                     </div>
 
-                                    <div className="flex items-center gap-1">
+                                    <div className="flex items-center gap-1.5 shrink-0">
                                         <Button
                                             type="button"
                                             onClick={() => handleOpenEdit(tx)}
@@ -448,7 +496,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 </div>
 
                                 {tx.note && (
-                                    <p className="text-xs text-muted-foreground bg-muted p-2 rounded-lg italic">
+                                    <p className="text-xs text-muted-foreground bg-muted/60 p-2 rounded-lg italic break-words">
                                         "{tx.note}"
                                     </p>
                                 )}
@@ -463,7 +511,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
 
                 {/* Dialog Add Transaction */}
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                    <DialogContent className="max-w-lg">
+                    <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Catat Transaksi Baru</DialogTitle>
                         </DialogHeader>
@@ -474,7 +522,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 type="button"
                                 onClick={() => addForm.setData('type', 'expense')}
                                 className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                    addForm.data.type === 'expense' ? 'bg-rose-500 text-white shadow' : 'text-muted-foreground'
+                                    addForm.data.type === 'expense' ? 'bg-rose-500 text-white shadow-xs' : 'text-muted-foreground'
                                 }`}
                             >
                                 Pengeluaran
@@ -483,7 +531,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 type="button"
                                 onClick={() => addForm.setData('type', 'income')}
                                 className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                    addForm.data.type === 'income' ? 'bg-blue-500 text-white shadow' : 'text-muted-foreground'
+                                    addForm.data.type === 'income' ? 'bg-blue-500 text-white shadow-xs' : 'text-muted-foreground'
                                 }`}
                             >
                                 Pemasukan
@@ -492,7 +540,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 type="button"
                                 onClick={() => addForm.setData('type', 'transfer')}
                                 className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                    addForm.data.type === 'transfer' ? 'bg-amber-500 text-white shadow' : 'text-muted-foreground'
+                                    addForm.data.type === 'transfer' ? 'bg-amber-500 text-white shadow-xs' : 'text-muted-foreground'
                                 }`}
                             >
                                 Transfer
@@ -532,7 +580,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 </div>
                             )}
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {(addForm.data.type === 'expense' || addForm.data.type === 'transfer') && (
                                     <div>
                                         <Label>Wallet Asal</Label>
@@ -572,7 +620,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <Label>Siapa Yang Membayar?</Label>
                                     <select
@@ -631,7 +679,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                 {/* Dialog Edit Transaction */}
                 {editingTx && (
                     <Dialog open={!!editingTx} onOpenChange={() => setEditingTx(null)}>
-                        <DialogContent className="max-w-lg">
+                        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Edit Transaksi</DialogTitle>
                             </DialogHeader>
@@ -668,7 +716,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <Label>Siapa Yang Membayar?</Label>
                                         <select
@@ -727,3 +775,4 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
         </>
     );
 }
+

@@ -9,7 +9,6 @@ import {
     PieChart,
     Tag,
     Wallet,
-    X,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import {
@@ -19,6 +18,11 @@ import {
     SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 export function MobileFloatingDock() {
     const { url } = usePage();
@@ -45,48 +49,61 @@ export function MobileFloatingDock() {
 
     return (
         <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 md:hidden">
-            <nav className="bg-slate-900/85 backdrop-blur-xl border border-slate-700/60 rounded-full px-3 py-2 flex items-center gap-1.5 shadow-2xl shadow-slate-950/80 ring-1 ring-white/10">
+            <nav className="bg-popover/90 backdrop-blur-xl border border-border/80 rounded-full px-3 py-2 flex items-center gap-1.5 shadow-xl shadow-black/10 ring-1 ring-border/30 text-popover-foreground">
                 {mainNavItems.map((item) => {
                     const active = isActive(item.href);
                     const Icon = item.icon;
 
                     return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`relative flex items-center justify-center size-11 rounded-full transition-all duration-300 ${
-                                active
-                                    ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/30 scale-105'
-                                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                            }`}
-                        >
-                            <Icon className="size-5" />
-                        </Link>
+                        <Tooltip key={item.href}>
+                            <TooltipTrigger asChild>
+                                <Link
+                                    href={item.href}
+                                    className={`relative flex items-center justify-center size-11 rounded-full transition-all duration-300 ${
+                                        active
+                                            ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-105'
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                                    }`}
+                                >
+                                    <Icon className="size-5" />
+                                </Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="text-xs">
+                                {item.title}
+                            </TooltipContent>
+                        </Tooltip>
                     );
                 })}
 
                 {/* More / Secondary Menu Sheet Drawer */}
                 <Sheet open={openSheet} onOpenChange={setOpenSheet}>
-                    <SheetTrigger asChild>
-                        <button
-                            type="button"
-                            className={`flex items-center justify-center size-11 rounded-full transition-all duration-300 ${
-                                secondaryNavItems.some((item) => isActive(item.href))
-                                    ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/30'
-                                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                            }`}
-                        >
-                            <Menu className="size-5" />
-                        </button>
-                    </SheetTrigger>
-                    <SheetContent side="bottom" className="bg-slate-900/95 backdrop-blur-2xl border-t border-slate-800 text-white rounded-t-3xl p-6">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <SheetTrigger asChild>
+                                <button
+                                    type="button"
+                                    className={`flex items-center justify-center size-11 rounded-full transition-all duration-300 ${
+                                        secondaryNavItems.some((item) => isActive(item.href))
+                                            ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-105'
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
+                                    }`}
+                                >
+                                    <Menu className="size-5" />
+                                </button>
+                            </SheetTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs">
+                            Menu Lainnya
+                        </TooltipContent>
+                    </Tooltip>
+                    <SheetContent side="bottom" className="bg-popover text-popover-foreground border-t border-border rounded-t-3xl p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
                         <SheetHeader className="mb-4">
-                            <SheetTitle className="text-white text-left text-lg font-bold flex items-center justify-between">
+                            <SheetTitle className="text-foreground text-left text-lg font-bold">
                                 Menu Lainnya
                             </SheetTitle>
                         </SheetHeader>
 
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="grid grid-cols-1 gap-2.5">
                             {secondaryNavItems.map((item) => {
                                 const active = isActive(item.href);
                                 const Icon = item.icon;
@@ -96,18 +113,18 @@ export function MobileFloatingDock() {
                                         key={item.href}
                                         href={item.href}
                                         onClick={() => setOpenSheet(false)}
-                                        className={`flex items-center gap-3.5 p-3.5 rounded-2xl border transition-all ${
+                                        className={`flex items-center gap-3.5 p-3 rounded-2xl border transition-all ${
                                             active
-                                                ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
-                                                : 'bg-slate-800/50 border-slate-800 text-slate-300 hover:bg-slate-800'
+                                                ? 'bg-primary/10 border-primary/30 text-primary'
+                                                : 'bg-card border-border text-foreground hover:bg-muted/60'
                                         }`}
                                     >
-                                        <div className={`p-2.5 rounded-xl ${active ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-slate-300'}`}>
+                                        <div className={`p-2.5 rounded-xl transition-colors ${active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                                             <Icon className="size-5" />
                                         </div>
                                         <div>
-                                            <h4 className="font-semibold text-sm text-white">{item.title}</h4>
-                                            <p className="text-xs text-slate-400 mt-0.5">{item.desc}</p>
+                                            <h4 className="font-semibold text-sm text-foreground">{item.title}</h4>
+                                            <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
                                         </div>
                                     </Link>
                                 );
@@ -119,3 +136,4 @@ export function MobileFloatingDock() {
         </div>
     );
 }
+
