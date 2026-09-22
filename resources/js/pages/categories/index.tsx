@@ -100,88 +100,93 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
         <>
             <Head title="Manajemen Kategori" />
 
-            <div className="p-4 md:p-6 pb-28 md:pb-8 space-y-6 max-w-6xl mx-auto">
+            <div className="p-3 sm:p-6 pb-28 md:pb-8 space-y-4 max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                            <Tag className="size-6 text-emerald-500" />
-                            Kategori Pemasukan &amp; Pengeluaran
+                <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                            <Tag className="size-5 text-emerald-500 shrink-0" />
+                            <span className="truncate">Kategori Transaksi</span>
                         </h1>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="text-xs text-muted-foreground hidden sm:block">
                             Atur klasifikasi jenis transaksi keuangan keluarga Anda.
                         </p>
                     </div>
 
                     <Button
                         type="button"
+                        size="sm"
                         onClick={() => {
                             addForm.setData('type', activeTab);
                             setIsAddOpen(true);
                         }}
-                        className="font-bold gap-2 shadow-sm"
+                        className="font-bold gap-1.5 shadow-sm text-xs shrink-0"
                     >
                         <Plus className="size-4" />
-                        Tambah Kategori Baru
+                        <span>Tambah Kategori</span>
                     </Button>
                 </div>
 
-                {/* Tabs Selector */}
-                <div className="flex gap-2 border-b border-border pb-2">
-                    <Button
-                        type="button"
-                        onClick={() => setActiveTab('expense')}
-                        variant={activeTab === 'expense' ? 'default' : 'outline'}
-                        size="sm"
-                        className="gap-2"
-                    >
-                        <ArrowDownRight className="size-4" />
-                        Pengeluaran ({categories.filter((c) => c.type === 'expense').length})
-                    </Button>
-                    <Button
-                        type="button"
-                        onClick={() => setActiveTab('income')}
-                        variant={activeTab === 'income' ? 'default' : 'outline'}
-                        size="sm"
-                        className="gap-2"
-                    >
-                        <ArrowUpRight className="size-4" />
-                        Pemasukan ({categories.filter((c) => c.type === 'income').length})
-                    </Button>
+                {/* Tabs Selector & Count summary */}
+                <div className="flex items-center justify-between border-b border-border pb-2 gap-2">
+                    <div className="flex gap-1.5">
+                        <Button
+                            type="button"
+                            onClick={() => setActiveTab('expense')}
+                            variant={activeTab === 'expense' ? 'default' : 'outline'}
+                            size="sm"
+                            className="h-8 text-xs gap-1.5 px-3"
+                        >
+                            <ArrowDownRight className="size-3.5" />
+                            Pengeluaran ({categories.filter((c) => c.type === 'expense').length})
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => setActiveTab('income')}
+                            variant={activeTab === 'income' ? 'default' : 'outline'}
+                            size="sm"
+                            className="h-8 text-xs gap-1.5 px-3"
+                        >
+                            <ArrowUpRight className="size-3.5" />
+                            Pemasukan ({categories.filter((c) => c.type === 'income').length})
+                        </Button>
+                    </div>
                 </div>
 
-                {/* Categories Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {/* Categories Grid - 2 columns on mobile */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
                     {filteredCategories.map((cat) => (
                         <Card
                             key={cat.id}
-                            className="shadow-sm border-border p-4 flex items-center justify-between hover:border-accent transition-all"
+                            className="shadow-xs border-border p-2.5 sm:p-3 flex items-center justify-between gap-2 hover:border-accent transition-all min-w-0"
                         >
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 min-w-0">
                                 <div
-                                    className="size-9 rounded-xl flex items-center justify-center border border-border shrink-0"
+                                    className="size-7 sm:size-8 rounded-lg flex items-center justify-center border border-border shrink-0"
                                     style={{
                                         backgroundColor: cat.color ? `${cat.color}20` : 'var(--muted)',
                                         borderColor: cat.color ? `${cat.color}40` : 'var(--border)',
                                     }}
                                 >
-                                    <CategoryIcon name={cat.icon} color={cat.color} className="size-5" />
+                                    <CategoryIcon name={cat.icon} color={cat.color} className="size-4" />
                                 </div>
-                                <div>
-                                    <h4 className="font-semibold text-foreground text-sm">{cat.name}</h4>
+                                <div className="min-w-0">
+                                    <h4 className="font-medium text-foreground text-xs sm:text-sm truncate" title={cat.name}>
+                                        {cat.name}
+                                    </h4>
                                     {cat.is_default && (
-                                        <Badge variant="secondary" className="text-[10px] uppercase">Default</Badge>
+                                        <Badge variant="secondary" className="text-[9px] px-1 py-0 uppercase">Default</Badge>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-0.5 shrink-0">
                                 <Button
                                     type="button"
                                     onClick={() => handleOpenEdit(cat)}
                                     variant="ghost"
                                     size="sm"
-                                    className="text-muted-foreground hover:text-foreground p-1.5 h-auto"
+                                    className="size-7 p-0 text-muted-foreground hover:text-foreground"
                                 >
                                     <Edit2 className="size-3.5" />
                                 </Button>
@@ -190,7 +195,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                     onClick={() => handleDelete(cat.id, cat.name)}
                                     variant="ghost"
                                     size="sm"
-                                    className="text-rose-500 hover:text-rose-600 p-1.5 h-auto"
+                                    className="size-7 p-0 text-rose-500 hover:text-rose-600"
                                 >
                                     <Trash2 className="size-3.5" />
                                 </Button>
@@ -199,8 +204,8 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                     ))}
 
                     {filteredCategories.length === 0 && (
-                        <Card className="col-span-full p-8 text-center text-muted-foreground text-sm border-border">
-                            Belum ada kategori untuk jenis ini. Klik "Tambah Kategori Baru" di atas.
+                        <Card className="col-span-full p-6 text-center text-muted-foreground text-xs border-border">
+                            Belum ada kategori untuk jenis ini. Klik "Tambah Kategori" di atas.
                         </Card>
                     )}
                 </div>
@@ -218,7 +223,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                 <select
                                     value={addForm.data.type}
                                     onChange={(e) => addForm.setData('type', e.target.value as any)}
-                                    className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm focus:ring-2 focus:ring-ring"
+                                    className="w-full bg-background border border-input text-foreground rounded-md p-2 mt-1 text-sm focus:ring-2 focus:ring-ring"
                                 >
                                     <option value="expense">Pengeluaran (Expense)</option>
                                     <option value="income">Pemasukan (Income)</option>
@@ -232,7 +237,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                     placeholder="Contoh: Langganan Netflix, Servis Laptop"
                                     value={addForm.data.name}
                                     onChange={(e) => addForm.setData('name', e.target.value)}
-                                    className="mt-1"
+                                    className="mt-1 text-sm"
                                     required
                                 />
                             </div>
@@ -253,7 +258,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                             key={c}
                                             type="button"
                                             onClick={() => addForm.setData('color', c)}
-                                            className={`size-7 rounded-full transition-transform border border-border ${
+                                            className={`size-6 rounded-full transition-transform border border-border ${
                                                 addForm.data.color === c ? 'scale-125 ring-2 ring-primary ring-offset-2' : 'hover:scale-110'
                                             }`}
                                             style={{ backgroundColor: c }}
@@ -263,7 +268,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                         type="color"
                                         value={addForm.data.color}
                                         onChange={(e) => addForm.setData('color', e.target.value)}
-                                        className="size-7 rounded-full cursor-pointer border border-border p-0 bg-transparent"
+                                        className="size-6 rounded-full cursor-pointer border border-border p-0 bg-transparent"
                                         title="Pilih Warna Custom"
                                     />
                                     <span className="text-xs text-muted-foreground font-mono ml-1">{addForm.data.color}</span>
@@ -275,10 +280,11 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                     type="button"
                                     onClick={() => setIsAddOpen(false)}
                                     variant="outline"
+                                    size="sm"
                                 >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={addForm.processing} className="font-bold">
+                                <Button type="submit" disabled={addForm.processing} size="sm" className="font-bold">
                                     Simpan Kategori
                                 </Button>
                             </div>
@@ -301,7 +307,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                         type="text"
                                         value={editForm.data.name}
                                         onChange={(e) => editForm.setData('name', e.target.value)}
-                                        className="mt-1"
+                                        className="mt-1 text-sm"
                                         required
                                     />
                                 </div>
@@ -322,7 +328,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                                 key={c}
                                                 type="button"
                                                 onClick={() => editForm.setData('color', c)}
-                                                className={`size-7 rounded-full transition-transform border border-border ${
+                                                className={`size-6 rounded-full transition-transform border border-border ${
                                                     editForm.data.color === c ? 'scale-125 ring-2 ring-primary ring-offset-2' : 'hover:scale-110'
                                                 }`}
                                                 style={{ backgroundColor: c }}
@@ -332,7 +338,7 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                             type="color"
                                             value={editForm.data.color}
                                             onChange={(e) => editForm.setData('color', e.target.value)}
-                                            className="size-7 rounded-full cursor-pointer border border-border p-0 bg-transparent"
+                                            className="size-6 rounded-full cursor-pointer border border-border p-0 bg-transparent"
                                             title="Pilih Warna Custom"
                                         />
                                         <span className="text-xs text-muted-foreground font-mono ml-1">{editForm.data.color}</span>
@@ -344,10 +350,11 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
                                         type="button"
                                         onClick={() => setEditingCat(null)}
                                         variant="outline"
+                                        size="sm"
                                     >
                                         Batal
                                     </Button>
-                                    <Button type="submit" disabled={editForm.processing} className="font-bold">
+                                    <Button type="submit" disabled={editForm.processing} size="sm" className="font-bold">
                                         Simpan Perubahan
                                     </Button>
                                 </div>
