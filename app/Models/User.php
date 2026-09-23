@@ -18,10 +18,12 @@ use Laravel\Fortify\PasskeyAuthenticatable;
 
 /**
  * @property int $id
+ * @property string|null $google_id
  * @property string $name
  * @property string $email
+ * @property string|null $avatar
  * @property Carbon|null $email_verified_at
- * @property string $password
+ * @property string|null $password
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -29,7 +31,7 @@ use Laravel\Fortify\PasskeyAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password', 'current_family_id'])]
+#[Fillable(['name', 'email', 'password', 'google_id', 'avatar', 'current_family_id'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements PasskeyUser
 {

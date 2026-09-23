@@ -1,6 +1,7 @@
 import { Form, Head } from '@inertiajs/react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
+import SocialGoogleButton from '@/components/social-google-button';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -32,6 +33,17 @@ export default function Login({ status, canResetPassword }: Props) {
                 {({ processing, errors }) => (
                     <>
                         <div className="grid gap-6">
+                            <SocialGoogleButton label="Masuk dengan Google" />
+
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-slate-200 dark:border-slate-800" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-background text-muted-foreground px-2">atau</span>
+                                </div>
+                            </div>
+
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email address</Label>
                                 <Input
