@@ -16,7 +16,10 @@ export function formatRp(num: number | string): string {
  * Format date string (YYYY-MM-DD or ISO) into human-readable Indonesian format.
  * Examples: "Hari ini", "Kemarin", "18 Sep 2026", "18 September 2026"
  */
-export function formatDateHuman(dateStr: string, fullMonth: boolean = false): string {
+export function formatDateHuman(
+    dateStr: string,
+    fullMonth: boolean = false,
+): string {
     if (!dateStr) return '-';
 
     const date = new Date(dateStr);

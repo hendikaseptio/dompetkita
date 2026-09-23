@@ -33,6 +33,15 @@
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="manifest" href="/manifest.webmanifest">
+
+        {{-- PWA & Mobile Meta Tags --}}
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="DompetKita">
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#10b981">
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
 
         @fonts
 

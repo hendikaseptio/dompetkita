@@ -106,7 +106,9 @@ export default function BudgetsIndex({
     // Category Management Modal State
     const [isCatManageOpen, setIsCatManageOpen] = useState(false);
     const [isCatFormOpen, setIsCatFormOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [editingCategory, setEditingCategory] = useState<Category | null>(
+        null,
+    );
 
     const budgetForm = useForm({
         category_id: '',
@@ -129,7 +131,10 @@ export default function BudgetsIndex({
         router.get('/budgets', { month: m, year: y }, { preserveState: true });
     };
 
-    const handleOpenSetBudget = (categoryId?: number, currentLimit?: number) => {
+    const handleOpenSetBudget = (
+        categoryId?: number,
+        currentLimit?: number,
+    ) => {
         if (categoryId) {
             setSelectedCatId(categoryId);
             setLimitInput(currentLimit ? String(currentLimit) : '');
@@ -157,7 +162,11 @@ export default function BudgetsIndex({
     };
 
     const handleDeleteBudget = (budgetId: number, categoryName: string) => {
-        if (confirm(`Hapus batasan budget untuk "${categoryName}"? Kategori akan menjadi Pengeluaran Variabel (Unbudgeted).`)) {
+        if (
+            confirm(
+                `Hapus batasan budget untuk "${categoryName}"? Kategori akan menjadi Pengeluaran Variabel (Unbudgeted).`,
+            )
+        ) {
             deleteForm.delete(`/budgets/${budgetId}`);
         }
     };
@@ -203,80 +212,118 @@ export default function BudgetsIndex({
     };
 
     const handleDeleteCategory = (cat: Category) => {
-        if (confirm(`Hapus kategori "${cat.name}"? Semua data transaksi kategori ini akan tetap tersimpan.`)) {
+        if (
+            confirm(
+                `Hapus kategori "${cat.name}"? Semua data transaksi kategori ini akan tetap tersimpan.`,
+            )
+        ) {
             router.delete(`/categories/${cat.id}`, {
                 preserveScroll: true,
             });
         }
     };
 
-    const displayedCategories = allCategories.length > 0 ? allCategories : expenseCategories;
+    const displayedCategories =
+        allCategories.length > 0 ? allCategories : expenseCategories;
 
     return (
         <>
             <Head title="Alokasi Budget Keuangan" />
 
-            <div className="p-3 sm:p-6 pb-28 md:pb-8 space-y-4 max-w-7xl mx-auto">
+            <div className="mx-auto max-w-7xl space-y-4 p-3 pb-28 sm:p-6 md:pb-8">
                 {/* Header & Month Selector */}
                 <div className="flex flex-col gap-2.5">
                     <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                                <PieChart className="size-5 text-purple-500 shrink-0" />
-                                <span className="truncate">Target &amp; Alokasi Budget</span>
+                            <h1 className="text-foreground flex items-center gap-2 text-lg font-bold tracking-tight sm:text-xl">
+                                <PieChart className="size-5 shrink-0 text-purple-500" />
+                                <span className="truncate">
+                                    Target &amp; Alokasi Budget
+                                </span>
                             </h1>
-                            <p className="text-xs text-muted-foreground hidden sm:block">
-                                Kendalikan batas pengeluaran bulanan keluarga dan kelola kategori transaksi.
+                            <p className="text-muted-foreground hidden text-xs sm:block">
+                                Kendalikan batas pengeluaran bulanan keluarga
+                                dan kelola kategori transaksi.
                             </p>
                         </div>
 
-                        <div className="flex items-center gap-1.5 shrink-0">
+                        <div className="flex shrink-0 items-center gap-1.5">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={() => setIsCatManageOpen(true)}
-                                className="font-semibold gap-1 shadow-xs text-xs h-8 px-2.5"
+                                className="h-8 gap-1 px-2.5 text-xs font-semibold shadow-xs"
                                 size="sm"
                             >
                                 <Tag className="size-3.5 text-purple-500" />
-                                <span className="hidden sm:inline">Kelola Kategori</span>
+                                <span className="hidden sm:inline">
+                                    Kelola Kategori
+                                </span>
                                 <span className="sm:hidden">Kategori</span>
                             </Button>
 
                             <Button
                                 type="button"
                                 onClick={() => handleOpenSetBudget()}
-                                className="font-bold gap-1 shadow-xs text-xs h-8 px-2.5"
+                                className="h-8 gap-1 px-2.5 text-xs font-bold shadow-xs"
                                 size="sm"
                             >
                                 <Plus className="size-3.5" />
-                                <span className="hidden sm:inline">Atur Limit</span>
+                                <span className="hidden sm:inline">
+                                    Atur Limit
+                                </span>
                                 <span className="sm:hidden">Atur</span>
                             </Button>
                         </div>
                     </div>
 
                     {/* Month Selector row */}
-                    <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-2.5 py-1 shadow-xs self-start text-xs font-semibold">
-                        <Calendar className="size-3.5 text-muted-foreground shrink-0" />
+                    <div className="bg-card border-border flex items-center gap-2 self-start rounded-lg border px-2.5 py-1 text-xs font-semibold shadow-xs">
+                        <Calendar className="text-muted-foreground size-3.5 shrink-0" />
                         <select
                             value={month}
-                            onChange={(e) => handleMonthYearChange(Number(e.target.value), year)}
-                            className="bg-transparent text-foreground text-xs font-semibold border-none focus:ring-0 cursor-pointer outline-none p-0"
+                            onChange={(e) =>
+                                handleMonthYearChange(
+                                    Number(e.target.value),
+                                    year,
+                                )
+                            }
+                            className="text-foreground cursor-pointer border-none bg-transparent p-0 text-xs font-semibold outline-none focus:ring-0"
                         >
-                            {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                                <option key={m} value={m} className="bg-card text-card-foreground">
-                                    {new Date(2026, m - 1, 1).toLocaleString('id-ID', { month: 'long' })}
-                                </option>
-                            ))}
+                            {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                                (m) => (
+                                    <option
+                                        key={m}
+                                        value={m}
+                                        className="bg-card text-card-foreground"
+                                    >
+                                        {new Date(
+                                            2026,
+                                            m - 1,
+                                            1,
+                                        ).toLocaleString('id-ID', {
+                                            month: 'long',
+                                        })}
+                                    </option>
+                                ),
+                            )}
                         </select>
                         <select
                             value={year}
-                            onChange={(e) => handleMonthYearChange(month, Number(e.target.value))}
-                            className="bg-transparent text-foreground text-xs font-semibold border-none focus:ring-0 cursor-pointer outline-none p-0"
+                            onChange={(e) =>
+                                handleMonthYearChange(
+                                    month,
+                                    Number(e.target.value),
+                                )
+                            }
+                            className="text-foreground cursor-pointer border-none bg-transparent p-0 text-xs font-semibold outline-none focus:ring-0"
                         >
                             {[2025, 2026, 2027].map((y) => (
-                                <option key={y} value={y} className="bg-card text-card-foreground">
+                                <option
+                                    key={y}
+                                    value={y}
+                                    className="bg-card text-card-foreground"
+                                >
                                     {y}
                                 </option>
                             ))}
@@ -285,25 +332,41 @@ export default function BudgetsIndex({
                 </div>
 
                 {/* Summary Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-                    <Card className="shadow-xs border-border p-3">
-                        <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Limit</span>
-                        <div className="text-lg sm:text-xl font-black text-purple-500 mt-0.5 truncate">{formatRp(summary.totalLimit)}</div>
+                <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+                    <Card className="border-border p-3 shadow-xs">
+                        <span className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase sm:text-xs">
+                            Total Limit
+                        </span>
+                        <div className="mt-0.5 truncate text-lg font-black text-purple-500 sm:text-xl">
+                            {formatRp(summary.totalLimit)}
+                        </div>
                     </Card>
 
-                    <Card className="shadow-xs border-border p-3">
-                        <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Terpakai</span>
-                        <div className="text-lg sm:text-xl font-black text-rose-500 mt-0.5 truncate">{formatRp(summary.totalBudgetedSpent)}</div>
+                    <Card className="border-border p-3 shadow-xs">
+                        <span className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase sm:text-xs">
+                            Terpakai
+                        </span>
+                        <div className="mt-0.5 truncate text-lg font-black text-rose-500 sm:text-xl">
+                            {formatRp(summary.totalBudgetedSpent)}
+                        </div>
                     </Card>
 
-                    <Card className="shadow-xs border-border p-3">
-                        <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Luar Budget</span>
-                        <div className="text-lg sm:text-xl font-black text-amber-500 mt-0.5 truncate">{formatRp(summary.totalUnbudgetedSpent)}</div>
+                    <Card className="border-border p-3 shadow-xs">
+                        <span className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase sm:text-xs">
+                            Luar Budget
+                        </span>
+                        <div className="mt-0.5 truncate text-lg font-black text-amber-500 sm:text-xl">
+                            {formatRp(summary.totalUnbudgetedSpent)}
+                        </div>
                     </Card>
 
-                    <Card className="shadow-xs border-border p-3">
-                        <span className="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sisa Budget</span>
-                        <div className={`text-lg sm:text-xl font-black mt-0.5 truncate ${summary.remainingBudget >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                    <Card className="border-border p-3 shadow-xs">
+                        <span className="text-muted-foreground text-[10px] font-semibold tracking-wider uppercase sm:text-xs">
+                            Sisa Budget
+                        </span>
+                        <div
+                            className={`mt-0.5 truncate text-lg font-black sm:text-xl ${summary.remainingBudget >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}
+                        >
                             {formatRp(summary.remainingBudget)}
                         </div>
                     </Card>
@@ -311,31 +374,37 @@ export default function BudgetsIndex({
 
                 {/* Section 1: Categories WITH Budget Limit */}
                 <div className="space-y-3">
-                    <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                    <h2 className="text-foreground flex items-center gap-2 text-base font-bold">
                         <PieChart className="size-4 text-purple-500" />
                         Kategori Terbudget ({budgetedItems.length})
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                         {budgetedItems.length > 0 ? (
                             budgetedItems.map((item) => (
                                 <Card
                                     key={item.id}
-                                    className={`shadow-sm border p-5 space-y-3 transition-all ${
+                                    className={`space-y-3 border p-5 shadow-sm transition-all ${
                                         item.is_over_budget
                                             ? 'border-rose-500/60 bg-rose-500/5'
                                             : item.percentage >= 80
-                                            ? 'border-amber-500/60 bg-amber-500/5'
-                                            : 'border-border'
+                                              ? 'border-amber-500/60 bg-amber-500/5'
+                                              : 'border-border'
                                     }`}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className="size-9 rounded-xl flex items-center justify-center border border-border shrink-0"
+                                                className="border-border flex size-9 shrink-0 items-center justify-center rounded-xl border"
                                                 style={{
-                                                    backgroundColor: item.category.color ? `${item.category.color}20` : 'var(--muted)',
-                                                    borderColor: item.category.color ? `${item.category.color}40` : 'var(--border)',
+                                                    backgroundColor: item
+                                                        .category.color
+                                                        ? `${item.category.color}20`
+                                                        : 'var(--muted)',
+                                                    borderColor: item.category
+                                                        .color
+                                                        ? `${item.category.color}40`
+                                                        : 'var(--border)',
                                                 }}
                                             >
                                                 <CategoryIcon
@@ -345,44 +414,73 @@ export default function BudgetsIndex({
                                                 />
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-foreground text-base flex items-center gap-1.5">
-                                                    <span>{item.category.name}</span>
+                                                <h3 className="text-foreground flex items-center gap-1.5 text-base font-bold">
+                                                    <span>
+                                                        {item.category.name}
+                                                    </span>
                                                 </h3>
-                                                <p className="text-xs text-muted-foreground">Limit: {formatRp(item.monthly_limit)}</p>
+                                                <p className="text-muted-foreground text-xs">
+                                                    Limit:{' '}
+                                                    {formatRp(
+                                                        item.monthly_limit,
+                                                    )}
+                                                </p>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-2">
                                             {item.is_over_budget ? (
-                                                <Badge variant="destructive" className="text-[11px] font-bold gap-1">
-                                                    <ShieldAlert className="size-3.5" /> Over Budget
+                                                <Badge
+                                                    variant="destructive"
+                                                    className="gap-1 text-[11px] font-bold"
+                                                >
+                                                    <ShieldAlert className="size-3.5" />{' '}
+                                                    Over Budget
                                                 </Badge>
                                             ) : item.percentage >= 80 ? (
-                                                <Badge variant="outline" className="text-[11px] font-bold text-amber-500 border-amber-500/30 bg-amber-500/10 gap-1">
-                                                    <AlertCircle className="size-3.5" /> Mendekati Limit
+                                                <Badge
+                                                    variant="outline"
+                                                    className="gap-1 border-amber-500/30 bg-amber-500/10 text-[11px] font-bold text-amber-500"
+                                                >
+                                                    <AlertCircle className="size-3.5" />{' '}
+                                                    Mendekati Limit
                                                 </Badge>
                                             ) : (
-                                                <Badge variant="outline" className="text-[11px] font-bold text-emerald-500 border-emerald-500/30 bg-emerald-500/10 gap-1">
-                                                    <CheckCircle2 className="size-3.5" /> Aman
+                                                <Badge
+                                                    variant="outline"
+                                                    className="gap-1 border-emerald-500/30 bg-emerald-500/10 text-[11px] font-bold text-emerald-500"
+                                                >
+                                                    <CheckCircle2 className="size-3.5" />{' '}
+                                                    Aman
                                                 </Badge>
                                             )}
 
                                             <Button
                                                 type="button"
-                                                onClick={() => handleOpenSetBudget(item.category_id, item.monthly_limit)}
+                                                onClick={() =>
+                                                    handleOpenSetBudget(
+                                                        item.category_id,
+                                                        item.monthly_limit,
+                                                    )
+                                                }
                                                 variant="ghost"
                                                 size="sm"
-                                                className="text-muted-foreground hover:text-foreground p-1.5 h-auto"
+                                                className="text-muted-foreground hover:text-foreground h-auto p-1.5"
                                             >
                                                 <Edit2 className="size-4" />
                                             </Button>
 
                                             <Button
                                                 type="button"
-                                                onClick={() => handleDeleteBudget(item.id, item.category.name)}
+                                                onClick={() =>
+                                                    handleDeleteBudget(
+                                                        item.id,
+                                                        item.category.name,
+                                                    )
+                                                }
                                                 variant="ghost"
                                                 size="sm"
-                                                className="text-rose-500 hover:text-rose-600 p-1.5 h-auto"
+                                                className="h-auto p-1.5 text-rose-500 hover:text-rose-600"
                                             >
                                                 <Trash2 className="size-4" />
                                             </Button>
@@ -391,64 +489,80 @@ export default function BudgetsIndex({
 
                                     {/* Progress Bar */}
                                     <div className="space-y-1.5">
-                                        <div className="flex justify-between text-xs font-mono">
-                                            <span className="text-muted-foreground">Terpakai: {formatRp(item.spent)}</span>
-                                            <span className="text-foreground font-bold">{item.percentage}%</span>
+                                        <div className="flex justify-between font-mono text-xs">
+                                            <span className="text-muted-foreground">
+                                                Terpakai: {formatRp(item.spent)}
+                                            </span>
+                                            <span className="text-foreground font-bold">
+                                                {item.percentage}%
+                                            </span>
                                         </div>
-                                        <div className="h-3 w-full bg-muted rounded-full overflow-hidden p-0.5 border border-border">
+                                        <div className="bg-muted border-border h-3 w-full overflow-hidden rounded-full border p-0.5">
                                             <div
                                                 className={`h-full rounded-full transition-all duration-500 ${
                                                     item.is_over_budget
                                                         ? 'bg-rose-500'
                                                         : item.percentage >= 80
-                                                        ? 'bg-amber-500'
-                                                        : 'bg-emerald-500'
+                                                          ? 'bg-amber-500'
+                                                          : 'bg-emerald-500'
                                                 }`}
-                                                style={{ width: `${Math.min(100, item.percentage)}%` }}
+                                                style={{
+                                                    width: `${Math.min(100, item.percentage)}%`,
+                                                }}
                                             />
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-between text-xs pt-2 border-t border-border">
-                                        <span className="text-muted-foreground">Sisa Anggaran:</span>
-                                        <span className={`font-bold font-mono ${item.remaining < 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+                                    <div className="border-border flex justify-between border-t pt-2 text-xs">
+                                        <span className="text-muted-foreground">
+                                            Sisa Anggaran:
+                                        </span>
+                                        <span
+                                            className={`font-mono font-bold ${item.remaining < 0 ? 'text-rose-500' : 'text-emerald-500'}`}
+                                        >
                                             {formatRp(item.remaining)}
                                         </span>
                                     </div>
                                 </Card>
                             ))
                         ) : (
-                            <Card className="col-span-2 p-8 text-center text-muted-foreground text-sm border-border">
-                                Belum ada kategori yang diberi limit budget untuk bulan ini.
+                            <Card className="text-muted-foreground border-border col-span-2 p-8 text-center text-sm">
+                                Belum ada kategori yang diberi limit budget
+                                untuk bulan ini.
                             </Card>
                         )}
                     </div>
                 </div>
 
                 {/* Section 2: Unbudgeted / Variable Expenses Section */}
-                <div className="space-y-3 pt-3 border-t border-border">
+                <div className="border-border space-y-3 border-t pt-3">
                     <div>
-                        <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+                        <h2 className="text-foreground flex items-center gap-2 text-base font-bold">
                             <Sparkles className="size-4 text-amber-500" />
                             Pengeluaran Luar Budget ({unbudgetedItems.length})
                         </h2>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                            Kategori tanpa limit fixed (seluruh transaksi tetap tercatat di grafik &amp; laporan).
+                        <p className="text-muted-foreground mt-0.5 text-xs">
+                            Kategori tanpa limit fixed (seluruh transaksi tetap
+                            tercatat di grafik &amp; laporan).
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
                         {unbudgetedItems.map((item) => (
                             <Card
                                 key={item.category_id}
-                                className="shadow-xs border-border p-2.5 sm:p-3 flex items-center justify-between gap-2 transition-all min-w-0"
+                                className="border-border flex min-w-0 items-center justify-between gap-2 p-2.5 shadow-xs transition-all sm:p-3"
                             >
-                                <div className="flex items-center gap-2 min-w-0">
+                                <div className="flex min-w-0 items-center gap-2">
                                     <div
-                                        className="size-7 sm:size-8 rounded-lg flex items-center justify-center border border-border shrink-0"
+                                        className="border-border flex size-7 shrink-0 items-center justify-center rounded-lg border sm:size-8"
                                         style={{
-                                            backgroundColor: item.category.color ? `${item.category.color}20` : 'var(--muted)',
-                                            borderColor: item.category.color ? `${item.category.color}40` : 'var(--border)',
+                                            backgroundColor: item.category.color
+                                                ? `${item.category.color}20`
+                                                : 'var(--muted)',
+                                            borderColor: item.category.color
+                                                ? `${item.category.color}40`
+                                                : 'var(--border)',
                                         }}
                                     >
                                         <CategoryIcon
@@ -458,8 +572,10 @@ export default function BudgetsIndex({
                                         />
                                     </div>
                                     <div className="min-w-0">
-                                        <h4 className="font-semibold text-foreground text-xs sm:text-sm truncate">{item.category.name}</h4>
-                                        <p className="text-[11px] text-amber-500 font-mono font-bold mt-0.5 truncate">
+                                        <h4 className="text-foreground truncate text-xs font-semibold sm:text-sm">
+                                            {item.category.name}
+                                        </h4>
+                                        <p className="mt-0.5 truncate font-mono text-[11px] font-bold text-amber-500">
                                             {formatRp(item.spent)}
                                         </p>
                                     </div>
@@ -467,10 +583,12 @@ export default function BudgetsIndex({
 
                                 <Button
                                     type="button"
-                                    onClick={() => handleOpenSetBudget(item.category_id)}
+                                    onClick={() =>
+                                        handleOpenSetBudget(item.category_id)
+                                    }
                                     variant="outline"
                                     size="sm"
-                                    className="text-[11px] h-7 px-2 shrink-0"
+                                    className="h-7 shrink-0 px-2 text-[11px]"
                                 >
                                     Set Limit
                                 </Button>
@@ -481,17 +599,22 @@ export default function BudgetsIndex({
 
                 {/* Dialog 1: Set Budget Limit */}
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                    <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Atur Limit Budget Bulanan</DialogTitle>
                         </DialogHeader>
 
-                        <form onSubmit={handleSaveBudget} className="space-y-4 pt-2">
+                        <form
+                            onSubmit={handleSaveBudget}
+                            className="space-y-4 pt-2"
+                        >
                             <div>
                                 <Label>Pilih Kategori Pengeluaran</Label>
                                 <Select
                                     value={String(selectedCatId)}
-                                    onValueChange={(val) => setSelectedCatId(Number(val))}
+                                    onValueChange={(val) =>
+                                        setSelectedCatId(Number(val))
+                                    }
                                     required
                                 >
                                     <SelectTrigger className="mt-1">
@@ -499,9 +622,16 @@ export default function BudgetsIndex({
                                     </SelectTrigger>
                                     <SelectContent>
                                         {expenseCategories.map((c) => (
-                                            <SelectItem key={c.id} value={String(c.id)}>
+                                            <SelectItem
+                                                key={c.id}
+                                                value={String(c.id)}
+                                            >
                                                 <div className="flex items-center gap-2">
-                                                    <CategoryIcon name={c.icon} color={c.color} className="size-4" />
+                                                    <CategoryIcon
+                                                        name={c.icon}
+                                                        color={c.color}
+                                                        className="size-4"
+                                                    />
                                                     <span>{c.name}</span>
                                                 </div>
                                             </SelectItem>
@@ -516,7 +646,7 @@ export default function BudgetsIndex({
                                     placeholder="0"
                                     value={limitInput}
                                     onChangeValue={(val) => setLimitInput(val)}
-                                    className="font-bold text-lg mt-1"
+                                    className="mt-1 text-lg font-bold"
                                     required
                                 />
                             </div>
@@ -529,7 +659,11 @@ export default function BudgetsIndex({
                                 >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={budgetForm.processing} className="font-bold">
+                                <Button
+                                    type="submit"
+                                    disabled={budgetForm.processing}
+                                    className="font-bold"
+                                >
                                     Simpan Budget
                                 </Button>
                             </div>
@@ -538,8 +672,11 @@ export default function BudgetsIndex({
                 </Dialog>
 
                 {/* Dialog 2: Category Management List */}
-                <Dialog open={isCatManageOpen} onOpenChange={setIsCatManageOpen}>
-                    <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                <Dialog
+                    open={isCatManageOpen}
+                    onOpenChange={setIsCatManageOpen}
+                >
+                    <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
                         <DialogHeader className="flex flex-row items-center justify-between">
                             <DialogTitle className="flex items-center gap-2 text-lg font-bold">
                                 <Tag className="size-5 text-purple-500" />
@@ -549,48 +686,60 @@ export default function BudgetsIndex({
 
                         <div className="space-y-4 pt-2">
                             <div className="flex items-center justify-between">
-                                <p className="text-xs text-muted-foreground">
-                                    Kelola daftar kategori pemasukan dan pengeluaran beserta icon &amp; warnanya.
+                                <p className="text-muted-foreground text-xs">
+                                    Kelola daftar kategori pemasukan dan
+                                    pengeluaran beserta icon &amp; warnanya.
                                 </p>
                                 <Button
                                     type="button"
                                     onClick={() => handleOpenCategoryForm()}
                                     size="sm"
-                                    className="font-bold gap-1 text-xs shrink-0"
+                                    className="shrink-0 gap-1 text-xs font-bold"
                                 >
                                     <FolderPlus className="size-4" />
                                     Tambah Kategori
                                 </Button>
                             </div>
 
-                            <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                            <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
                                 {displayedCategories.map((cat) => (
                                     <div
                                         key={cat.id}
-                                        className="flex items-center justify-between p-3 rounded-xl border border-border bg-card hover:bg-muted/30 transition-colors"
+                                        className="border-border bg-card hover:bg-muted/30 flex items-center justify-between rounded-xl border p-3 transition-colors"
                                     >
                                         <div className="flex items-center gap-3">
                                             <div
-                                                className="size-8 rounded-lg flex items-center justify-center border border-border shrink-0"
+                                                className="border-border flex size-8 shrink-0 items-center justify-center rounded-lg border"
                                                 style={{
-                                                    backgroundColor: cat.color ? `${cat.color}20` : 'var(--muted)',
-                                                    borderColor: cat.color ? `${cat.color}40` : 'var(--border)',
+                                                    backgroundColor: cat.color
+                                                        ? `${cat.color}20`
+                                                        : 'var(--muted)',
+                                                    borderColor: cat.color
+                                                        ? `${cat.color}40`
+                                                        : 'var(--border)',
                                                 }}
                                             >
-                                                <CategoryIcon name={cat.icon} color={cat.color} className="size-4" />
+                                                <CategoryIcon
+                                                    name={cat.icon}
+                                                    color={cat.color}
+                                                    className="size-4"
+                                                />
                                             </div>
                                             <div>
-                                                <h4 className="font-semibold text-foreground text-sm flex items-center gap-2">
+                                                <h4 className="text-foreground flex items-center gap-2 text-sm font-semibold">
                                                     <span>{cat.name}</span>
                                                     <Badge
                                                         variant="outline"
-                                                        className={`text-[10px] px-1.5 py-0 font-medium ${
-                                                            cat.type === 'income'
-                                                                ? 'text-emerald-500 border-emerald-500/30 bg-emerald-500/10'
-                                                                : 'text-purple-500 border-purple-500/30 bg-purple-500/10'
+                                                        className={`px-1.5 py-0 text-[10px] font-medium ${
+                                                            cat.type ===
+                                                            'income'
+                                                                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500'
+                                                                : 'border-purple-500/30 bg-purple-500/10 text-purple-500'
                                                         }`}
                                                     >
-                                                        {cat.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+                                                        {cat.type === 'income'
+                                                            ? 'Pemasukan'
+                                                            : 'Pengeluaran'}
                                                     </Badge>
                                                 </h4>
                                             </div>
@@ -601,8 +750,10 @@ export default function BudgetsIndex({
                                                 type="button"
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={() => handleOpenCategoryForm(cat)}
-                                                className="size-8 p-0 text-muted-foreground hover:text-foreground"
+                                                onClick={() =>
+                                                    handleOpenCategoryForm(cat)
+                                                }
+                                                className="text-muted-foreground hover:text-foreground size-8 p-0"
                                                 title="Edit Kategori"
                                             >
                                                 <Edit2 className="size-4" />
@@ -612,7 +763,9 @@ export default function BudgetsIndex({
                                                 type="button"
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={() => handleDeleteCategory(cat)}
+                                                onClick={() =>
+                                                    handleDeleteCategory(cat)
+                                                }
                                                 className="size-8 p-0 text-rose-500 hover:text-rose-600"
                                                 title="Hapus Kategori"
                                             >
@@ -623,7 +776,7 @@ export default function BudgetsIndex({
                                 ))}
 
                                 {displayedCategories.length === 0 && (
-                                    <p className="text-center text-xs text-muted-foreground py-6">
+                                    <p className="text-muted-foreground py-6 text-center text-xs">
                                         Belum ada kategori yang dibuat.
                                     </p>
                                 )}
@@ -644,20 +797,30 @@ export default function BudgetsIndex({
 
                 {/* Dialog 3: Add / Edit Category Form */}
                 <Dialog open={isCatFormOpen} onOpenChange={setIsCatFormOpen}>
-                    <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>
-                                {editingCategory ? `Edit Kategori "${editingCategory.name}"` : 'Tambah Kategori Baru'}
+                                {editingCategory
+                                    ? `Edit Kategori "${editingCategory.name}"`
+                                    : 'Tambah Kategori Baru'}
                             </DialogTitle>
                         </DialogHeader>
 
-                        <form onSubmit={handleSaveCategory} className="space-y-4 pt-2">
+                        <form
+                            onSubmit={handleSaveCategory}
+                            className="space-y-4 pt-2"
+                        >
                             <div>
                                 <Label>Nama Kategori</Label>
                                 <Input
                                     placeholder="Misal: Belanja Bulanan, Gaji, Liburan..."
                                     value={categoryForm.data.name}
-                                    onChange={(e) => categoryForm.setData('name', e.target.value)}
+                                    onChange={(e) =>
+                                        categoryForm.setData(
+                                            'name',
+                                            e.target.value,
+                                        )
+                                    }
                                     className="mt-1"
                                     required
                                 />
@@ -668,14 +831,20 @@ export default function BudgetsIndex({
                                     <Label>Tipe Kategori</Label>
                                     <Select
                                         value={categoryForm.data.type}
-                                        onValueChange={(val) => categoryForm.setData('type', val)}
+                                        onValueChange={(val) =>
+                                            categoryForm.setData('type', val)
+                                        }
                                     >
                                         <SelectTrigger className="mt-1">
                                             <SelectValue placeholder="Pilih Tipe" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="expense">Pengeluaran</SelectItem>
-                                            <SelectItem value="income">Pemasukan</SelectItem>
+                                            <SelectItem value="expense">
+                                                Pengeluaran
+                                            </SelectItem>
+                                            <SelectItem value="income">
+                                                Pemasukan
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -685,20 +854,28 @@ export default function BudgetsIndex({
                             <IconPicker
                                 value={categoryForm.data.icon}
                                 color={categoryForm.data.color}
-                                onChange={(iconName) => categoryForm.setData('icon', iconName)}
+                                onChange={(iconName) =>
+                                    categoryForm.setData('icon', iconName)
+                                }
                             />
 
                             {/* Color Selector */}
                             <div>
-                                <Label className="text-xs font-semibold">Warna Kategori</Label>
-                                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                                <Label className="text-xs font-semibold">
+                                    Warna Kategori
+                                </Label>
+                                <div className="mt-1.5 flex flex-wrap items-center gap-2">
                                     {PRESET_COLORS.map((c) => (
                                         <button
                                             key={c}
                                             type="button"
-                                            onClick={() => categoryForm.setData('color', c)}
-                                            className={`size-7 rounded-full transition-transform border border-border ${
-                                                categoryForm.data.color === c ? 'scale-125 ring-2 ring-primary ring-offset-2' : 'hover:scale-110'
+                                            onClick={() =>
+                                                categoryForm.setData('color', c)
+                                            }
+                                            className={`border-border size-7 rounded-full border transition-transform ${
+                                                categoryForm.data.color === c
+                                                    ? 'ring-primary scale-125 ring-2 ring-offset-2'
+                                                    : 'hover:scale-110'
                                             }`}
                                             style={{ backgroundColor: c }}
                                         />
@@ -706,8 +883,13 @@ export default function BudgetsIndex({
                                     <input
                                         type="color"
                                         value={categoryForm.data.color}
-                                        onChange={(e) => categoryForm.setData('color', e.target.value)}
-                                        className="size-7 rounded-full cursor-pointer border border-border p-0 bg-transparent"
+                                        onChange={(e) =>
+                                            categoryForm.setData(
+                                                'color',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="border-border size-7 cursor-pointer rounded-full border bg-transparent p-0"
                                         title="Pilih Warna Custom"
                                     />
                                 </div>
@@ -721,8 +903,14 @@ export default function BudgetsIndex({
                                 >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={categoryForm.processing} className="font-bold">
-                                    {editingCategory ? 'Perbarui Kategori' : 'Simpan Kategori'}
+                                <Button
+                                    type="submit"
+                                    disabled={categoryForm.processing}
+                                    className="font-bold"
+                                >
+                                    {editingCategory
+                                        ? 'Perbarui Kategori'
+                                        : 'Simpan Kategori'}
                                 </Button>
                             </div>
                         </form>

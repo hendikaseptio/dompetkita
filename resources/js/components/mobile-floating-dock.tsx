@@ -30,6 +30,7 @@ import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
 import { edit as editProfile } from '@/routes/profile';
 import type { Auth } from '@/types';
+import { PwaInstallMenuItem } from '@/components/pwa-install-button';
 
 export function MobileFloatingDock() {
     const { url, props } = usePage<{ auth: Auth }>();
@@ -45,14 +46,35 @@ export function MobileFloatingDock() {
     ];
 
     const secondaryNavItems = [
-        { title: 'Kategori', href: '/categories', icon: Tag, desc: 'Kelola jenis pemasukan & pengeluaran' },
-        { title: 'Laporan Bulanan', href: '/reports/monthly', icon: BarChart3, desc: 'Rekap keuangan & aktivitas anggota' },
-        { title: 'Activity Log', href: '/activity-log', icon: Activity, desc: 'Audit log riwayat perubahan' },
-        { title: 'Keluarga Kita', href: '/family', icon: Home, desc: 'Pengaturan rumah tangga & undang pasangan' },
+        {
+            title: 'Kategori',
+            href: '/categories',
+            icon: Tag,
+            desc: 'Kelola jenis pemasukan & pengeluaran',
+        },
+        {
+            title: 'Laporan Bulanan',
+            href: '/reports/monthly',
+            icon: BarChart3,
+            desc: 'Rekap keuangan & aktivitas anggota',
+        },
+        {
+            title: 'Activity Log',
+            href: '/activity-log',
+            icon: Activity,
+            desc: 'Audit log riwayat perubahan',
+        },
+        {
+            title: 'Keluarga Kita',
+            href: '/family',
+            icon: Home,
+            desc: 'Pengaturan rumah tangga & undang pasangan',
+        },
     ];
 
     const isActive = (href: string) => {
-        if (href === '/dashboard' && (url === '/dashboard' || url === '/')) return true;
+        if (href === '/dashboard' && (url === '/dashboard' || url === '/'))
+            return true;
         return url.startsWith(href) && href !== '/dashboard';
     };
 
@@ -64,14 +86,18 @@ export function MobileFloatingDock() {
     const handleLogout = () => {
         setOpenSheet(false);
         cleanup();
-        router.post(logout().url, {}, {
-            onFinish: () => router.flushAll(),
-        });
+        router.post(
+            logout().url,
+            {},
+            {
+                onFinish: () => router.flushAll(),
+            },
+        );
     };
 
     return (
-        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 md:hidden">
-            <nav className="bg-popover/90 backdrop-blur-xl border border-border/80 rounded-full px-3 py-2 flex items-center gap-1.5 shadow-xl shadow-black/10 ring-1 ring-border/30 text-popover-foreground">
+        <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 md:hidden">
+            <nav className="bg-popover/90 border-border/80 ring-border/30 text-popover-foreground flex items-center gap-1.5 rounded-full border px-3 py-2 shadow-xl ring-1 shadow-black/10 backdrop-blur-xl">
                 {mainNavItems.map((item) => {
                     const active = isActive(item.href);
                     const Icon = item.icon;
@@ -81,10 +107,11 @@ export function MobileFloatingDock() {
                             <TooltipTrigger asChild>
                                 <Link
                                     href={item.href}
-                                    className={`relative flex items-center justify-center size-11 rounded-full transition-all duration-300 ${active
-                                            ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-105'
+                                    className={`relative flex size-11 items-center justify-center rounded-full transition-all duration-300 ${
+                                        active
+                                            ? 'bg-primary text-primary-foreground shadow-primary/25 scale-105 shadow-md'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
-                                        }`}
+                                    }`}
                                 >
                                     <Icon className="size-5" />
                                 </Link>
@@ -103,10 +130,11 @@ export function MobileFloatingDock() {
                             <SheetTrigger asChild>
                                 <button
                                     type="button"
-                                    className={`flex items-center justify-center size-11 rounded-full transition-all duration-300 ${isSecondaryActive
-                                            ? 'bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-105'
+                                    className={`flex size-11 items-center justify-center rounded-full transition-all duration-300 ${
+                                        isSecondaryActive
+                                            ? 'bg-primary text-primary-foreground shadow-primary/25 scale-105 shadow-md'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-muted/80'
-                                        }`}
+                                    }`}
                                 >
                                     <Menu className="size-5" />
                                 </button>
@@ -116,7 +144,10 @@ export function MobileFloatingDock() {
                             Menu Lainnya
                         </TooltipContent>
                     </Tooltip>
-                    <SheetContent side="bottom" className="bg-popover text-popover-foreground border-t border-border rounded-t-3xl p-6 shadow-2xl max-h-[85vh] overflow-y-auto">
+                    <SheetContent
+                        side="bottom"
+                        className="bg-popover text-popover-foreground border-border max-h-[85vh] overflow-y-auto rounded-t-3xl border-t p-6 shadow-2xl"
+                    >
                         <SheetHeader className="mb-4">
                             <SheetTitle className="text-foreground text-left text-lg font-bold">
                                 Menu Lainnya
@@ -125,14 +156,17 @@ export function MobileFloatingDock() {
 
                         {/* User Card */}
                         {auth?.user && (
-                            <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-muted/60 border border-border mb-4">
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <UserInfo user={auth.user} showEmail={true} />
+                            <div className="bg-muted/60 border-border mb-4 flex items-center justify-between gap-3 rounded-2xl border p-3">
+                                <div className="flex min-w-0 items-center gap-3">
+                                    <UserInfo
+                                        user={auth.user}
+                                        showEmail={true}
+                                    />
                                 </div>
                                 <Link
                                     href={editProfile().url}
                                     onClick={() => setOpenSheet(false)}
-                                    className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-background shrink-0 transition-colors border border-transparent hover:border-border"
+                                    className="text-muted-foreground hover:text-foreground hover:bg-background hover:border-border shrink-0 rounded-xl border border-transparent p-2 transition-colors"
                                     title="Pengaturan Profil"
                                 >
                                     <Settings className="size-5" />
@@ -150,17 +184,24 @@ export function MobileFloatingDock() {
                                         key={item.href}
                                         href={item.href}
                                         onClick={() => setOpenSheet(false)}
-                                        className={`flex items-center gap-3.5 p-3 rounded-2xl border transition-all ${active
+                                        className={`flex items-center gap-3.5 rounded-2xl border p-3 transition-all ${
+                                            active
                                                 ? 'bg-primary/10 border-primary/30 text-primary'
                                                 : 'bg-card border-border text-foreground hover:bg-muted/60'
-                                            }`}
+                                        }`}
                                     >
-                                        <div className={`p-2.5 rounded-xl transition-colors ${active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                                        <div
+                                            className={`rounded-xl p-2.5 transition-colors ${active ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
+                                        >
                                             <Icon className="size-5" />
                                         </div>
                                         <div>
-                                            <h4 className="font-semibold text-sm text-foreground">{item.title}</h4>
-                                            <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+                                            <h4 className="text-foreground text-sm font-semibold">
+                                                {item.title}
+                                            </h4>
+                                            <p className="text-muted-foreground mt-0.5 text-xs">
+                                                {item.desc}
+                                            </p>
                                         </div>
                                     </Link>
                                 );
@@ -168,39 +209,55 @@ export function MobileFloatingDock() {
                         </div>
 
                         {/* Account Actions Section */}
-                        <div className="pt-3 border-t border-border mt-3 space-y-2">
-                            <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block px-1">
+                        <div className="border-border mt-3 space-y-2 border-t pt-3">
+                            <span className="text-muted-foreground block px-1 text-[11px] font-semibold tracking-wider uppercase">
                                 Akun & Pengaturan
                             </span>
+
+                            {/* PWA Mobile Installation */}
+                            <PwaInstallMenuItem
+                                onAction={() => setOpenSheet(false)}
+                            />
 
                             <Link
                                 href={editProfile().url}
                                 onClick={() => setOpenSheet(false)}
-                                className={`flex items-center gap-3.5 p-3 rounded-2xl border transition-all ${url.startsWith('/settings')
+                                className={`flex items-center gap-3.5 rounded-2xl border p-3 transition-all ${
+                                    url.startsWith('/settings')
                                         ? 'bg-primary/10 border-primary/30 text-primary'
                                         : 'bg-card border-border text-foreground hover:bg-muted/60'
-                                    }`}
+                                }`}
                             >
-                                <div className={`p-2.5 rounded-xl transition-colors ${url.startsWith('/settings') ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                                <div
+                                    className={`rounded-xl p-2.5 transition-colors ${url.startsWith('/settings') ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}
+                                >
                                     <Settings className="size-5" />
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-sm text-foreground">Pengaturan Akun</h4>
-                                    <p className="text-xs text-muted-foreground mt-0.5">Profil, kata sandi, dan keamanan</p>
+                                    <h4 className="text-foreground text-sm font-semibold">
+                                        Pengaturan Akun
+                                    </h4>
+                                    <p className="text-muted-foreground mt-0.5 text-xs">
+                                        Profil, kata sandi, dan keamanan
+                                    </p>
                                 </div>
                             </Link>
 
                             <button
                                 type="button"
                                 onClick={handleLogout}
-                                className="w-full text-left flex items-center gap-3.5 p-3 rounded-2xl border border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/20 transition-all cursor-pointer"
+                                className="border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/20 flex w-full cursor-pointer items-center gap-3.5 rounded-2xl border p-3 text-left transition-all"
                             >
-                                <div className="p-2.5 rounded-xl text-destructive-foreground">
+                                <div className="text-destructive-foreground rounded-xl p-2.5">
                                     <LogOut className="size-5" />
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-sm">Keluar (Log Out)</h4>
-                                    <p className="text-xs text-destructive/80 mt-0.5">Akhiri sesi di perangkat ini</p>
+                                    <h4 className="text-sm font-semibold">
+                                        Keluar (Log Out)
+                                    </h4>
+                                    <p className="text-destructive/80 mt-0.5 text-xs">
+                                        Akhiri sesi di perangkat ini
+                                    </p>
                                 </div>
                             </button>
                         </div>
@@ -210,5 +267,3 @@ export function MobileFloatingDock() {
         </div>
     );
 }
-
-

@@ -65,7 +65,12 @@ interface Transaction {
     wallet_to_id: number | null;
     creator?: { id: number; name: string };
     payer?: { id: number; name: string };
-    category?: { id: number; name: string; color: string | null; icon: string | null };
+    category?: {
+        id: number;
+        name: string;
+        color: string | null;
+        icon: string | null;
+    };
     wallet_from?: { id: number; name: string };
     wallet_to?: { id: number; name: string };
 }
@@ -90,7 +95,13 @@ interface TransactionsProps {
     };
 }
 
-export default function TransactionsIndex({ transactions, wallets, categories, members, filters }: TransactionsProps) {
+export default function TransactionsIndex({
+    transactions,
+    wallets,
+    categories,
+    members,
+    filters,
+}: TransactionsProps) {
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [editingTx, setEditingTx] = useState<Transaction | null>(null);
 
@@ -125,7 +136,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
         router.get(
             '/transactions',
             { ...filters, [key]: value },
-            { preserveState: true, replace: true }
+            { preserveState: true, replace: true },
         );
     };
 
@@ -162,34 +173,41 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
     };
 
     const handleDelete = (id: number) => {
-        if (confirm('Hapus transaksi ini? Saldo dompet terkait akan disesuaikan secara otomatis.')) {
+        if (
+            confirm(
+                'Hapus transaksi ini? Saldo dompet terkait akan disesuaikan secara otomatis.',
+            )
+        ) {
             deleteForm.delete(`/transactions/${id}`);
         }
     };
 
-    const hasActiveFilters = Boolean(typeFilter || filters.wallet_id || filters.category_id || search);
+    const hasActiveFilters = Boolean(
+        typeFilter || filters.wallet_id || filters.category_id || search,
+    );
 
     return (
         <>
             <Head title="Histori Transaksi" />
 
-            <div className="p-4 sm:p-6 pb-28 md:pb-10 space-y-6 max-w-7xl mx-auto">
+            <div className="mx-auto max-w-7xl space-y-6 p-4 pb-28 sm:p-6 md:pb-10">
                 {/* Top Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-                            <Receipt className="size-6 text-primary" />
+                        <h1 className="text-foreground flex items-center gap-2 text-xl font-bold tracking-tight sm:text-2xl">
+                            <Receipt className="text-primary size-6" />
                             Catatan Transaksi Keuangan
                         </h1>
-                        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                            Histori lengkap pengeluaran, pemasukan, dan transfer antar wallet keluarga.
+                        <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
+                            Histori lengkap pengeluaran, pemasukan, dan transfer
+                            antar wallet keluarga.
                         </p>
                     </div>
 
                     <Button
                         type="button"
                         onClick={() => setIsAddOpen(true)}
-                        className="w-full sm:w-auto font-semibold gap-2 shadow-xs shrink-0"
+                        className="w-full shrink-0 gap-2 font-semibold shadow-xs sm:w-auto"
                     >
                         <Plus className="size-4" />
                         Tambah Transaksi
@@ -197,17 +215,20 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                 </div>
 
                 {/* Filter Toolbar */}
-                <Card className="shadow-xs border-border p-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-center">
+                <Card className="border-border p-4 shadow-xs">
+                    <div className="grid grid-cols-1 items-center gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         <div className="relative w-full">
-                            <Search className="size-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                            <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                             <Input
                                 type="text"
                                 placeholder="Cari catatan..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleFilterChange('search', search)}
-                                className="pl-9 text-sm w-full"
+                                onKeyDown={(e) =>
+                                    e.key === 'Enter' &&
+                                    handleFilterChange('search', search)
+                                }
+                                className="w-full pl-9 text-sm"
                             />
                         </div>
 
@@ -224,14 +245,24 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">Semua Jenis</SelectItem>
-                                <SelectItem value="expense">Pengeluaran</SelectItem>
-                                <SelectItem value="income">Pemasukan</SelectItem>
-                                <SelectItem value="transfer">Transfer</SelectItem>
+                                <SelectItem value="expense">
+                                    Pengeluaran
+                                </SelectItem>
+                                <SelectItem value="income">
+                                    Pemasukan
+                                </SelectItem>
+                                <SelectItem value="transfer">
+                                    Transfer
+                                </SelectItem>
                             </SelectContent>
                         </Select>
 
                         <Select
-                            value={filters.wallet_id ? String(filters.wallet_id) : 'all'}
+                            value={
+                                filters.wallet_id
+                                    ? String(filters.wallet_id)
+                                    : 'all'
+                            }
                             onValueChange={(val) => {
                                 const nextVal = val === 'all' ? '' : val;
                                 handleFilterChange('wallet_id', nextVal);
@@ -241,7 +272,9 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 <SelectValue placeholder="Semua Wallet" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Semua Wallet</SelectItem>
+                                <SelectItem value="all">
+                                    Semua Wallet
+                                </SelectItem>
                                 {wallets.map((w) => (
                                     <SelectItem key={w.id} value={String(w.id)}>
                                         {w.name}
@@ -251,7 +284,11 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                         </Select>
 
                         <Select
-                            value={filters.category_id ? String(filters.category_id) : 'all'}
+                            value={
+                                filters.category_id
+                                    ? String(filters.category_id)
+                                    : 'all'
+                            }
                             onValueChange={(val) => {
                                 const nextVal = val === 'all' ? '' : val;
                                 handleFilterChange('category_id', nextVal);
@@ -261,10 +298,16 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 <SelectValue placeholder="Semua Kategori" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Semua Kategori</SelectItem>
+                                <SelectItem value="all">
+                                    Semua Kategori
+                                </SelectItem>
                                 {categories.map((c) => (
                                     <SelectItem key={c.id} value={String(c.id)}>
-                                        {c.name} ({c.type === 'income' ? 'Pemasukan' : 'Pengeluaran'})
+                                        {c.name} (
+                                        {c.type === 'income'
+                                            ? 'Pemasukan'
+                                            : 'Pengeluaran'}
+                                        )
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -272,7 +315,7 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                     </div>
 
                     {hasActiveFilters && (
-                        <div className="mt-3 pt-3 border-t border-border flex justify-end">
+                        <div className="border-border mt-3 flex justify-end border-t pt-3">
                             <Button
                                 type="button"
                                 variant="ghost"
@@ -280,9 +323,13 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 onClick={() => {
                                     setTypeFilter('');
                                     setSearch('');
-                                    router.get('/transactions', {}, { preserveState: true, replace: true });
+                                    router.get(
+                                        '/transactions',
+                                        {},
+                                        { preserveState: true, replace: true },
+                                    );
                                 }}
-                                className="text-xs text-muted-foreground hover:text-foreground gap-1.5"
+                                className="text-muted-foreground hover:text-foreground gap-1.5 text-xs"
                             >
                                 <RotateCcw className="size-3.5" />
                                 Reset Filter
@@ -292,73 +339,128 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                 </Card>
 
                 {/* Desktop View Table (hidden on mobile) */}
-                <Card className="shadow-xs border-border hidden md:block overflow-hidden">
-
+                <Card className="border-border hidden overflow-hidden shadow-xs md:block">
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full border-collapse text-left">
                             <thead>
-                                <tr className="border-b border-border bg-muted/50 text-xs text-muted-foreground uppercase tracking-wider font-semibold">
+                                <tr className="border-border bg-muted/50 text-muted-foreground border-b text-xs font-semibold tracking-wider uppercase">
                                     <th className="p-4">Tanggal</th>
                                     <th className="p-4">Jenis & Kategori</th>
-                                    <th className="p-4">Dicatat oleh / Dibayar oleh</th>
-                                    <th className="p-4">Sumber / Tujuan Wallet</th>
-                                    <th className="p-4 text-right">Jumlah (Rp)</th>
+                                    <th className="p-4">
+                                        Dicatat oleh / Dibayar oleh
+                                    </th>
+                                    <th className="p-4">
+                                        Sumber / Tujuan Wallet
+                                    </th>
+                                    <th className="p-4 text-right">
+                                        Jumlah (Rp)
+                                    </th>
                                     <th className="p-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-border text-sm">
+                            <tbody className="divide-border divide-y text-sm">
                                 {transactions.data.length > 0 ? (
                                     transactions.data.map((tx) => (
-                                        <tr key={tx.id} className="hover:bg-muted/40 transition-colors">
-                                            <td className="p-4 text-foreground font-medium text-xs whitespace-nowrap">
-                                                {formatDateWithDay(tx.transaction_date)}
+                                        <tr
+                                            key={tx.id}
+                                            className="hover:bg-muted/40 transition-colors"
+                                        >
+                                            <td className="text-foreground p-4 text-xs font-medium whitespace-nowrap">
+                                                {formatDateWithDay(
+                                                    tx.transaction_date,
+                                                )}
                                             </td>
 
                                             <td className="p-4">
                                                 <div className="flex items-center gap-2.5">
                                                     <div
-                                                        className="p-2 rounded-lg shrink-0 flex items-center justify-center border border-border"
+                                                        className="border-border flex shrink-0 items-center justify-center rounded-lg border p-2"
                                                         style={{
-                                                            backgroundColor: tx.category?.color ? `${tx.category.color}20` : 'var(--muted)',
-                                                            borderColor: tx.category?.color ? `${tx.category.color}40` : 'var(--border)',
+                                                            backgroundColor: tx
+                                                                .category?.color
+                                                                ? `${tx.category.color}20`
+                                                                : 'var(--muted)',
+                                                            borderColor: tx
+                                                                .category?.color
+                                                                ? `${tx.category.color}40`
+                                                                : 'var(--border)',
                                                         }}
                                                     >
-                                                        {tx.type === 'transfer' ? (
+                                                        {tx.type ===
+                                                        'transfer' ? (
                                                             <ArrowLeftRight className="size-4 text-amber-500" />
                                                         ) : (
-                                                            <CategoryIcon name={tx.category?.icon} color={tx.category?.color} className="size-4" />
+                                                            <CategoryIcon
+                                                                name={
+                                                                    tx.category
+                                                                        ?.icon
+                                                                }
+                                                                color={
+                                                                    tx.category
+                                                                        ?.color
+                                                                }
+                                                                className="size-4"
+                                                            />
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <span className="font-semibold text-foreground block">
-                                                            {tx.category?.name || (tx.type === 'transfer' ? 'Transfer Antar Wallet' : 'Transaksi')}
+                                                        <span className="text-foreground block font-semibold">
+                                                            {tx.category
+                                                                ?.name ||
+                                                                (tx.type ===
+                                                                'transfer'
+                                                                    ? 'Transfer Antar Wallet'
+                                                                    : 'Transaksi')}
                                                         </span>
-                                                        {tx.note && <p className="text-xs text-muted-foreground line-clamp-1">{tx.note}</p>}
+                                                        {tx.note && (
+                                                            <p className="text-muted-foreground line-clamp-1 text-xs">
+                                                                {tx.note}
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </td>
 
                                             <td className="p-4">
                                                 <div className="text-xs">
-                                                    <span className="text-foreground font-medium block">
-                                                        Dibayar: <strong className="text-emerald-500">{tx.payer?.name || '-'}</strong>
+                                                    <span className="text-foreground block font-medium">
+                                                        Dibayar:{' '}
+                                                        <strong className="text-emerald-500">
+                                                            {tx.payer?.name ||
+                                                                '-'}
+                                                        </strong>
                                                     </span>
                                                     <span className="text-muted-foreground">
-                                                        Input: {tx.creator?.name || '-'}
+                                                        Input:{' '}
+                                                        {tx.creator?.name ||
+                                                            '-'}
                                                     </span>
                                                 </div>
                                             </td>
 
-                                            <td className="p-4 text-xs text-foreground">
-                                                {tx.type === 'income' && tx.wallet_to && (
-                                                    <span className="text-blue-500 font-medium">Masuk ke: {tx.wallet_to.name}</span>
-                                                )}
-                                                {tx.type === 'expense' && tx.wallet_from && (
-                                                    <span className="text-rose-500 font-medium">Dari: {tx.wallet_from.name}</span>
-                                                )}
+                                            <td className="text-foreground p-4 text-xs">
+                                                {tx.type === 'income' &&
+                                                    tx.wallet_to && (
+                                                        <span className="font-medium text-blue-500">
+                                                            Masuk ke:{' '}
+                                                            {tx.wallet_to.name}
+                                                        </span>
+                                                    )}
+                                                {tx.type === 'expense' &&
+                                                    tx.wallet_from && (
+                                                        <span className="font-medium text-rose-500">
+                                                            Dari:{' '}
+                                                            {
+                                                                tx.wallet_from
+                                                                    .name
+                                                            }
+                                                        </span>
+                                                    )}
                                                 {tx.type === 'transfer' && (
-                                                    <span className="text-amber-500 font-medium">
-                                                        {tx.wallet_from?.name} &rarr; {tx.wallet_to?.name}
+                                                    <span className="font-medium text-amber-500">
+                                                        {tx.wallet_from?.name}{' '}
+                                                        &rarr;{' '}
+                                                        {tx.wallet_to?.name}
                                                     </span>
                                                 )}
                                             </td>
@@ -368,13 +470,20 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                                     className={
                                                         tx.type === 'income'
                                                             ? 'text-blue-500'
-                                                            : tx.type === 'expense'
-                                                            ? 'text-rose-500'
-                                                            : 'text-amber-500'
+                                                            : tx.type ===
+                                                                'expense'
+                                                              ? 'text-rose-500'
+                                                              : 'text-amber-500'
                                                     }
                                                 >
-                                                    {tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : ''}
-                                                    {formatRp(Number(tx.amount))}
+                                                    {tx.type === 'income'
+                                                        ? '+'
+                                                        : tx.type === 'expense'
+                                                          ? '-'
+                                                          : ''}
+                                                    {formatRp(
+                                                        Number(tx.amount),
+                                                    )}
                                                 </span>
                                             </td>
 
@@ -382,19 +491,23 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                                 <div className="flex items-center justify-center gap-1">
                                                     <Button
                                                         type="button"
-                                                        onClick={() => handleOpenEdit(tx)}
+                                                        onClick={() =>
+                                                            handleOpenEdit(tx)
+                                                        }
                                                         variant="ghost"
                                                         size="sm"
-                                                        className="text-muted-foreground hover:text-foreground p-1 h-auto"
+                                                        className="text-muted-foreground hover:text-foreground h-auto p-1"
                                                     >
                                                         <Edit2 className="size-4" />
                                                     </Button>
                                                     <Button
                                                         type="button"
-                                                        onClick={() => handleDelete(tx.id)}
+                                                        onClick={() =>
+                                                            handleDelete(tx.id)
+                                                        }
                                                         variant="ghost"
                                                         size="sm"
-                                                        className="text-rose-500 hover:text-rose-600 p-1 h-auto"
+                                                        className="h-auto p-1 text-rose-500 hover:text-rose-600"
                                                     >
                                                         <Trash2 className="size-4" />
                                                     </Button>
@@ -404,7 +517,10 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={6} className="p-8 text-center text-muted-foreground text-sm">
+                                        <td
+                                            colSpan={6}
+                                            className="text-muted-foreground p-8 text-center text-sm"
+                                        >
                                             Tidak ada transaksi ditemukan.
                                         </td>
                                     </tr>
@@ -415,60 +531,100 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                 </Card>
 
                 {/* Mobile View Card List (Mobile-Friendly Responsive Cards) */}
-                <div className="block md:hidden space-y-3">
+                <div className="block space-y-3 md:hidden">
                     {transactions.data.length > 0 ? (
                         transactions.data.map((tx) => (
-                            <Card key={tx.id} className="shadow-xs border-border p-4 space-y-3">
-                                <div className="flex items-start justify-between gap-3 border-b border-border pb-2.5">
-                                    <div className="flex items-center gap-2.5 min-w-0">
+                            <Card
+                                key={tx.id}
+                                className="border-border space-y-3 p-4 shadow-xs"
+                            >
+                                <div className="border-border flex items-start justify-between gap-3 border-b pb-2.5">
+                                    <div className="flex min-w-0 items-center gap-2.5">
                                         <div
-                                            className="p-2 rounded-lg shrink-0 flex items-center justify-center border border-border"
+                                            className="border-border flex shrink-0 items-center justify-center rounded-lg border p-2"
                                             style={{
-                                                backgroundColor: tx.category?.color ? `${tx.category.color}20` : 'var(--muted)',
-                                                borderColor: tx.category?.color ? `${tx.category.color}40` : 'var(--border)',
+                                                backgroundColor: tx.category
+                                                    ?.color
+                                                    ? `${tx.category.color}20`
+                                                    : 'var(--muted)',
+                                                borderColor: tx.category?.color
+                                                    ? `${tx.category.color}40`
+                                                    : 'var(--border)',
                                             }}
                                         >
                                             {tx.type === 'transfer' ? (
                                                 <ArrowLeftRight className="size-4 text-amber-500" />
                                             ) : (
-                                                <CategoryIcon name={tx.category?.icon} color={tx.category?.color} className="size-4" />
+                                                <CategoryIcon
+                                                    name={tx.category?.icon}
+                                                    color={tx.category?.color}
+                                                    className="size-4"
+                                                />
                                             )}
                                         </div>
                                         <div className="min-w-0">
-                                            <h4 className="font-semibold text-foreground text-sm truncate">
-                                                {tx.category?.name || (tx.type === 'transfer' ? 'Transfer' : 'Transaksi')}
+                                            <h4 className="text-foreground truncate text-sm font-semibold">
+                                                {tx.category?.name ||
+                                                    (tx.type === 'transfer'
+                                                        ? 'Transfer'
+                                                        : 'Transaksi')}
                                             </h4>
-                                            <span className="text-[11px] text-muted-foreground font-medium block">
-                                                {formatDateHuman(tx.transaction_date)}
+                                            <span className="text-muted-foreground block text-[11px] font-medium">
+                                                {formatDateHuman(
+                                                    tx.transaction_date,
+                                                )}
                                             </span>
                                         </div>
                                     </div>
 
                                     <span
-                                        className={`text-sm sm:text-base font-bold font-mono shrink-0 ${
+                                        className={`shrink-0 font-mono text-sm font-bold sm:text-base ${
                                             tx.type === 'income'
                                                 ? 'text-blue-600 dark:text-blue-400'
                                                 : tx.type === 'expense'
-                                                ? 'text-rose-600 dark:text-rose-400'
-                                                : 'text-amber-600 dark:text-amber-400'
+                                                  ? 'text-rose-600 dark:text-rose-400'
+                                                  : 'text-amber-600 dark:text-amber-400'
                                         }`}
                                     >
-                                        {tx.type === 'income' ? '+' : tx.type === 'expense' ? '-' : ''}
+                                        {tx.type === 'income'
+                                            ? '+'
+                                            : tx.type === 'expense'
+                                              ? '-'
+                                              : ''}
                                         {formatRp(Number(tx.amount))}
                                     </span>
                                 </div>
 
-                                <div className="flex items-center justify-between text-xs text-muted-foreground gap-2">
-                                    <div className="space-y-0.5 min-w-0">
-                                        <span>Dibayar: <strong className="text-foreground font-semibold">{tx.payer?.name || '-'}</strong></span>
-                                        {tx.wallet_from && <span className="block truncate">Wallet: {tx.wallet_from.name}</span>}
-                                        {tx.wallet_to && tx.type === 'income' && <span className="block truncate">Wallet: {tx.wallet_to.name}</span>}
-                                        {tx.type === 'transfer' && tx.wallet_from && tx.wallet_to && (
-                                            <span className="block truncate">{tx.wallet_from.name} &rarr; {tx.wallet_to.name}</span>
+                                <div className="text-muted-foreground flex items-center justify-between gap-2 text-xs">
+                                    <div className="min-w-0 space-y-0.5">
+                                        <span>
+                                            Dibayar:{' '}
+                                            <strong className="text-foreground font-semibold">
+                                                {tx.payer?.name || '-'}
+                                            </strong>
+                                        </span>
+                                        {tx.wallet_from && (
+                                            <span className="block truncate">
+                                                Wallet: {tx.wallet_from.name}
+                                            </span>
                                         )}
+                                        {tx.wallet_to &&
+                                            tx.type === 'income' && (
+                                                <span className="block truncate">
+                                                    Wallet: {tx.wallet_to.name}
+                                                </span>
+                                            )}
+                                        {tx.type === 'transfer' &&
+                                            tx.wallet_from &&
+                                            tx.wallet_to && (
+                                                <span className="block truncate">
+                                                    {tx.wallet_from.name} &rarr;{' '}
+                                                    {tx.wallet_to.name}
+                                                </span>
+                                            )}
                                     </div>
 
-                                    <div className="flex items-center gap-1.5 shrink-0">
+                                    <div className="flex shrink-0 items-center gap-1.5">
                                         <Button
                                             type="button"
                                             onClick={() => handleOpenEdit(tx)}
@@ -476,7 +632,8 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                             size="sm"
                                             className="h-8 px-2.5 text-xs"
                                         >
-                                            <Edit2 className="size-3.5 mr-1" /> Edit
+                                            <Edit2 className="mr-1 size-3.5" />{' '}
+                                            Edit
                                         </Button>
                                         <Button
                                             type="button"
@@ -491,14 +648,14 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 </div>
 
                                 {tx.note && (
-                                    <p className="text-xs text-muted-foreground bg-muted/60 p-2 rounded-lg italic break-words">
+                                    <p className="text-muted-foreground bg-muted/60 rounded-lg p-2 text-xs break-words italic">
                                         "{tx.note}"
                                     </p>
                                 )}
                             </Card>
                         ))
                     ) : (
-                        <Card className="p-6 text-center text-muted-foreground text-sm">
+                        <Card className="text-muted-foreground p-6 text-center text-sm">
                             Tidak ada transaksi ditemukan.
                         </Card>
                     )}
@@ -506,50 +663,67 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
 
                 {/* Dialog Add Transaction */}
                 <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                    <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Catat Transaksi Baru</DialogTitle>
                         </DialogHeader>
 
                         {/* Type Tabs */}
-                        <div className="grid grid-cols-3 gap-2 bg-muted p-1 rounded-xl">
+                        <div className="bg-muted grid grid-cols-3 gap-2 rounded-xl p-1">
                             <button
                                 type="button"
-                                onClick={() => addForm.setData('type', 'expense')}
-                                className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                    addForm.data.type === 'expense' ? 'bg-rose-500 text-white shadow-xs' : 'text-muted-foreground'
+                                onClick={() =>
+                                    addForm.setData('type', 'expense')
+                                }
+                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${
+                                    addForm.data.type === 'expense'
+                                        ? 'bg-rose-500 text-white shadow-xs'
+                                        : 'text-muted-foreground'
                                 }`}
                             >
                                 Pengeluaran
                             </button>
                             <button
                                 type="button"
-                                onClick={() => addForm.setData('type', 'income')}
-                                className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                    addForm.data.type === 'income' ? 'bg-blue-500 text-white shadow-xs' : 'text-muted-foreground'
+                                onClick={() =>
+                                    addForm.setData('type', 'income')
+                                }
+                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${
+                                    addForm.data.type === 'income'
+                                        ? 'bg-blue-500 text-white shadow-xs'
+                                        : 'text-muted-foreground'
                                 }`}
                             >
                                 Pemasukan
                             </button>
                             <button
                                 type="button"
-                                onClick={() => addForm.setData('type', 'transfer')}
-                                className={`py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                    addForm.data.type === 'transfer' ? 'bg-amber-500 text-white shadow-xs' : 'text-muted-foreground'
+                                onClick={() =>
+                                    addForm.setData('type', 'transfer')
+                                }
+                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${
+                                    addForm.data.type === 'transfer'
+                                        ? 'bg-amber-500 text-white shadow-xs'
+                                        : 'text-muted-foreground'
                                 }`}
                             >
                                 Transfer
                             </button>
                         </div>
 
-                        <form onSubmit={handleAddSubmit} className="space-y-4 pt-2">
+                        <form
+                            onSubmit={handleAddSubmit}
+                            className="space-y-4 pt-2"
+                        >
                             <div>
                                 <Label>Jumlah Transaksi</Label>
                                 <CurrencyInput
                                     placeholder="0"
                                     value={addForm.data.amount}
-                                    onChangeValue={(val) => addForm.setData('amount', val)}
-                                    className="text-lg font-bold mt-1"
+                                    onChangeValue={(val) =>
+                                        addForm.setData('amount', val)
+                                    }
+                                    className="mt-1 text-lg font-bold"
                                     required
                                 />
                             </div>
@@ -559,13 +733,24 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     <Label>Kategori</Label>
                                     <select
                                         value={addForm.data.category_id}
-                                        onChange={(e) => addForm.setData('category_id', e.target.value)}
-                                        className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 focus:ring-2 focus:ring-ring text-sm"
+                                        onChange={(e) =>
+                                            addForm.setData(
+                                                'category_id',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="bg-background border-input text-foreground focus:ring-ring mt-1 w-full rounded-md border p-2.5 text-sm focus:ring-2"
                                         required
                                     >
-                                        <option value="">-- Pilih Kategori --</option>
+                                        <option value="">
+                                            -- Pilih Kategori --
+                                        </option>
                                         {categories
-                                            .filter((c) => c.type === addForm.data.type)
+                                            .filter(
+                                                (c) =>
+                                                    c.type ===
+                                                    addForm.data.type,
+                                            )
                                             .map((c) => (
                                                 <option key={c.id} value={c.id}>
                                                     {c.name}
@@ -575,17 +760,25 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 </div>
                             )}
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {(addForm.data.type === 'expense' || addForm.data.type === 'transfer') && (
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                {(addForm.data.type === 'expense' ||
+                                    addForm.data.type === 'transfer') && (
                                     <div>
                                         <Label>Wallet Asal</Label>
                                         <select
                                             value={addForm.data.wallet_from_id}
-                                            onChange={(e) => addForm.setData('wallet_from_id', e.target.value)}
-                                            className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
+                                            onChange={(e) =>
+                                                addForm.setData(
+                                                    'wallet_from_id',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
                                             required
                                         >
-                                            <option value="">-- Pilih Wallet --</option>
+                                            <option value="">
+                                                -- Pilih Wallet --
+                                            </option>
                                             {wallets.map((w) => (
                                                 <option key={w.id} value={w.id}>
                                                     {w.name}
@@ -595,16 +788,24 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     </div>
                                 )}
 
-                                {(addForm.data.type === 'income' || addForm.data.type === 'transfer') && (
+                                {(addForm.data.type === 'income' ||
+                                    addForm.data.type === 'transfer') && (
                                     <div>
                                         <Label>Wallet Tujuan</Label>
                                         <select
                                             value={addForm.data.wallet_to_id}
-                                            onChange={(e) => addForm.setData('wallet_to_id', e.target.value)}
-                                            className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
+                                            onChange={(e) =>
+                                                addForm.setData(
+                                                    'wallet_to_id',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
                                             required
                                         >
-                                            <option value="">-- Pilih Wallet --</option>
+                                            <option value="">
+                                                -- Pilih Wallet --
+                                            </option>
                                             {wallets.map((w) => (
                                                 <option key={w.id} value={w.id}>
                                                     {w.name}
@@ -615,13 +816,18 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
                                     <Label>Siapa Yang Membayar?</Label>
                                     <select
                                         value={addForm.data.paid_by}
-                                        onChange={(e) => addForm.setData('paid_by', Number(e.target.value))}
-                                        className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
+                                        onChange={(e) =>
+                                            addForm.setData(
+                                                'paid_by',
+                                                Number(e.target.value),
+                                            )
+                                        }
+                                        className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
                                         required
                                     >
                                         {members.map((m) => (
@@ -637,7 +843,12 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     <Input
                                         type="date"
                                         value={addForm.data.transaction_date}
-                                        onChange={(e) => addForm.setData('transaction_date', e.target.value)}
+                                        onChange={(e) =>
+                                            addForm.setData(
+                                                'transaction_date',
+                                                e.target.value,
+                                            )
+                                        }
                                         className="mt-1"
                                         required
                                     />
@@ -650,7 +861,9 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     type="text"
                                     placeholder="Contoh: Beli bensin motor, Gaji bulan September"
                                     value={addForm.data.note}
-                                    onChange={(e) => addForm.setData('note', e.target.value)}
+                                    onChange={(e) =>
+                                        addForm.setData('note', e.target.value)
+                                    }
                                     className="mt-1"
                                 />
                             </div>
@@ -663,7 +876,11 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                 >
                                     Batal
                                 </Button>
-                                <Button type="submit" disabled={addForm.processing} className="font-bold">
+                                <Button
+                                    type="submit"
+                                    disabled={addForm.processing}
+                                    className="font-bold"
+                                >
                                     Simpan Transaksi
                                 </Button>
                             </div>
@@ -673,19 +890,27 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
 
                 {/* Dialog Edit Transaction */}
                 {editingTx && (
-                    <Dialog open={!!editingTx} onOpenChange={() => setEditingTx(null)}>
-                        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+                    <Dialog
+                        open={!!editingTx}
+                        onOpenChange={() => setEditingTx(null)}
+                    >
+                        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
                             <DialogHeader>
                                 <DialogTitle>Edit Transaksi</DialogTitle>
                             </DialogHeader>
 
-                            <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
+                            <form
+                                onSubmit={handleEditSubmit}
+                                className="space-y-4 pt-2"
+                            >
                                 <div>
                                     <Label>Jumlah Transaksi</Label>
                                     <CurrencyInput
                                         value={editForm.data.amount}
-                                        onChangeValue={(val) => editForm.setData('amount', val)}
-                                        className="text-lg font-bold mt-1"
+                                        onChangeValue={(val) =>
+                                            editForm.setData('amount', val)
+                                        }
+                                        className="mt-1 text-lg font-bold"
                                         required
                                     />
                                 </div>
@@ -695,15 +920,29 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                         <Label>Kategori</Label>
                                         <select
                                             value={editForm.data.category_id}
-                                            onChange={(e) => editForm.setData('category_id', e.target.value)}
-                                            className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
+                                            onChange={(e) =>
+                                                editForm.setData(
+                                                    'category_id',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
                                             required
                                         >
-                                            <option value="">-- Pilih Kategori --</option>
+                                            <option value="">
+                                                -- Pilih Kategori --
+                                            </option>
                                             {categories
-                                                .filter((c) => c.type === editForm.data.type)
+                                                .filter(
+                                                    (c) =>
+                                                        c.type ===
+                                                        editForm.data.type,
+                                                )
                                                 .map((c) => (
-                                                    <option key={c.id} value={c.id}>
+                                                    <option
+                                                        key={c.id}
+                                                        value={c.id}
+                                                    >
                                                         {c.name}
                                                     </option>
                                                 ))}
@@ -711,13 +950,18 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                     <div>
                                         <Label>Siapa Yang Membayar?</Label>
                                         <select
                                             value={editForm.data.paid_by}
-                                            onChange={(e) => editForm.setData('paid_by', e.target.value)}
-                                            className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm"
+                                            onChange={(e) =>
+                                                editForm.setData(
+                                                    'paid_by',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
                                             required
                                         >
                                             {members.map((m) => (
@@ -732,8 +976,15 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                         <Label>Tanggal Transaksi</Label>
                                         <Input
                                             type="date"
-                                            value={editForm.data.transaction_date}
-                                            onChange={(e) => editForm.setData('transaction_date', e.target.value)}
+                                            value={
+                                                editForm.data.transaction_date
+                                            }
+                                            onChange={(e) =>
+                                                editForm.setData(
+                                                    'transaction_date',
+                                                    e.target.value,
+                                                )
+                                            }
                                             className="mt-1"
                                             required
                                         />
@@ -745,7 +996,12 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     <Input
                                         type="text"
                                         value={editForm.data.note}
-                                        onChange={(e) => editForm.setData('note', e.target.value)}
+                                        onChange={(e) =>
+                                            editForm.setData(
+                                                'note',
+                                                e.target.value,
+                                            )
+                                        }
                                         className="mt-1"
                                     />
                                 </div>
@@ -758,7 +1014,11 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
                                     >
                                         Batal
                                     </Button>
-                                    <Button type="submit" disabled={editForm.processing} className="font-bold">
+                                    <Button
+                                        type="submit"
+                                        disabled={editForm.processing}
+                                        className="font-bold"
+                                    >
                                         Simpan Perubahan
                                     </Button>
                                 </div>
@@ -770,4 +1030,3 @@ export default function TransactionsIndex({ transactions, wallets, categories, m
         </>
     );
 }
-

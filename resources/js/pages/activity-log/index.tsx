@@ -29,47 +29,63 @@ export default function ActivityLogIndex({ logs }: ActivityLogProps) {
         <>
             <Head title="Riwayat Aktivitas Keuangan" />
 
-            <div className="p-4 md:p-6 space-y-6 max-w-5xl mx-auto">
+            <div className="mx-auto max-w-5xl space-y-6 p-4 md:p-6">
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                    <h1 className="text-foreground flex items-center gap-2 text-2xl font-bold tracking-tight">
                         <Activity className="size-6 text-emerald-500" />
                         Riwayat & Log Aktivitas Keluarga
                     </h1>
-                    <p className="text-sm text-muted-foreground mt-1">
-                        Catatan audit transparan setiap perubahan data keuangan yang dilakukan oleh anggota keluarga.
+                    <p className="text-muted-foreground mt-1 text-sm">
+                        Catatan audit transparan setiap perubahan data keuangan
+                        yang dilakukan oleh anggota keluarga.
                     </p>
                 </div>
 
                 {/* Log Timeline */}
-                <Card className="shadow-sm border-border p-6 relative">
-                    <div className="space-y-6 relative before:absolute before:inset-0 before:left-4 before:w-0.5 before:bg-border">
+                <Card className="border-border relative p-6 shadow-sm">
+                    <div className="before:bg-border relative space-y-6 before:absolute before:inset-0 before:left-4 before:w-0.5">
                         {logs.data.length > 0 ? (
                             logs.data.map((log) => (
-                                <div key={log.id} className="relative flex items-start gap-4 pl-8 group">
+                                <div
+                                    key={log.id}
+                                    className="group relative flex items-start gap-4 pl-8"
+                                >
                                     {/* Circle Icon */}
-                                    <div className="absolute left-1.5 top-1 size-5 rounded-full bg-background border-2 border-emerald-500 flex items-center justify-center text-emerald-500 shadow-sm group-hover:scale-110 transition-transform">
-                                        <div className="size-1.5 bg-emerald-500 rounded-full" />
+                                    <div className="bg-background absolute top-1 left-1.5 flex size-5 items-center justify-center rounded-full border-2 border-emerald-500 text-emerald-500 shadow-sm transition-transform group-hover:scale-110">
+                                        <div className="size-1.5 rounded-full bg-emerald-500" />
                                     </div>
 
-                                    <div className="bg-muted/50 border border-border rounded-xl p-4 flex-1 hover:border-accent transition-all">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-1">
-                                            <span className="font-semibold text-foreground text-sm flex items-center gap-1.5">
+                                    <div className="bg-muted/50 border-border hover:border-accent flex-1 rounded-xl border p-4 transition-all">
+                                        <div className="mb-1 flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
+                                            <span className="text-foreground flex items-center gap-1.5 text-sm font-semibold">
                                                 <User className="size-3.5 text-emerald-500" />
                                                 {log.user?.name || 'Sistem'}
                                             </span>
-                                            <span className="text-[11px] text-muted-foreground font-mono flex items-center gap-1">
+                                            <span className="text-muted-foreground flex items-center gap-1 font-mono text-[11px]">
                                                 <Clock className="size-3" />
-                                                {formatDateHuman(log.created_at, true)}, {new Date(log.created_at).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                                                {formatDateHuman(
+                                                    log.created_at,
+                                                    true,
+                                                )}
+                                                ,{' '}
+                                                {new Date(
+                                                    log.created_at,
+                                                ).toLocaleTimeString('id-ID', {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                })}
                                             </span>
                                         </div>
 
-                                        <p className="text-foreground text-sm">{log.description}</p>
+                                        <p className="text-foreground text-sm">
+                                            {log.description}
+                                        </p>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <div className="py-12 text-center text-muted-foreground text-sm">
+                            <div className="text-muted-foreground py-12 text-center text-sm">
                                 Belum ada catatan aktivitas tercatat.
                             </div>
                         )}

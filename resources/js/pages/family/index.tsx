@@ -1,5 +1,14 @@
 import { Head, useForm } from '@inertiajs/react';
-import { Check, Copy, Crown, Home, Shield, Trash2, UserPlus, Users } from 'lucide-react';
+import {
+    Check,
+    Copy,
+    Crown,
+    Home,
+    Shield,
+    Trash2,
+    UserPlus,
+    Users,
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -41,9 +50,15 @@ interface FamilyProps {
     userRole: 'owner' | 'member';
 }
 
-export default function FamilyIndex({ family, allFamilies, userRole }: FamilyProps) {
+export default function FamilyIndex({
+    family,
+    allFamilies,
+    userRole,
+}: FamilyProps) {
     const [copied, setCopied] = useState(false);
-    const [editingMember, setEditingMember] = useState<FamilyMember | null>(null);
+    const [editingMember, setEditingMember] = useState<FamilyMember | null>(
+        null,
+    );
 
     const editForm = useForm({
         nickname: '',
@@ -75,7 +90,11 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
     };
 
     const handleRemoveMember = (memberId: number) => {
-        if (confirm('Apakah Anda yakin ingin menghapus anggota ini dari keluarga?')) {
+        if (
+            confirm(
+                'Apakah Anda yakin ingin menghapus anggota ini dari keluarga?',
+            )
+        ) {
             switchForm.delete(`/family/members/${memberId}`);
         }
     };
@@ -88,35 +107,44 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
         <>
             <Head title="Pengaturan Keluarga" />
 
-            <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-6">
                 {/* Header Banner */}
-                <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                    <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 p-6 text-white shadow-xl">
+                    <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div>
-                            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-md">
                                 <Home className="size-3.5" />
                                 Family Household
                             </div>
-                            <h1 className="text-2xl font-extrabold tracking-tight">{family.name}</h1>
-                            <p className="text-emerald-100 text-sm mt-1">
-                                Kelola anggota keluarga, peran, dan undang pasangan untuk mengelola keuangan bersama.
+                            <h1 className="text-2xl font-extrabold tracking-tight">
+                                {family.name}
+                            </h1>
+                            <p className="mt-1 text-sm text-emerald-100">
+                                Kelola anggota keluarga, peran, dan undang
+                                pasangan untuk mengelola keuangan bersama.
                             </p>
                         </div>
 
                         {/* Invite Code Box */}
-                        <div className="bg-slate-900/60 backdrop-blur-md border border-white/20 rounded-xl p-4 flex flex-col items-start gap-2">
-                            <span className="text-xs font-medium text-emerald-200 uppercase tracking-wider">Kode Undangan Pasangan</span>
+                        <div className="flex flex-col items-start gap-2 rounded-xl border border-white/20 bg-slate-900/60 p-4 backdrop-blur-md">
+                            <span className="text-xs font-medium tracking-wider text-emerald-200 uppercase">
+                                Kode Undangan Pasangan
+                            </span>
                             <div className="flex items-center gap-2">
-                                <code className="bg-slate-950 px-3 py-1.5 rounded-lg text-lg font-mono font-bold text-emerald-400 tracking-wider">
+                                <code className="rounded-lg bg-slate-950 px-3 py-1.5 font-mono text-lg font-bold tracking-wider text-emerald-400">
                                     {family.code}
                                 </code>
                                 <Button
                                     type="button"
                                     onClick={handleCopyCode}
                                     size="sm"
-                                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold"
+                                    className="bg-emerald-500 font-bold text-slate-950 hover:bg-emerald-400"
                                 >
-                                    {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+                                    {copied ? (
+                                        <Check className="size-4" />
+                                    ) : (
+                                        <Copy className="size-4" />
+                                    )}
                                 </Button>
                             </div>
                         </div>
@@ -125,10 +153,14 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
 
                 {/* Multiple Families Switcher if user belongs to more than 1 */}
                 {allFamilies.length > 1 && (
-                    <Card className="shadow-sm border-border p-4 flex items-center justify-between">
+                    <Card className="border-border flex items-center justify-between p-4 shadow-sm">
                         <div>
-                            <h3 className="font-semibold text-foreground">Ganti Keluarga</h3>
-                            <p className="text-xs text-muted-foreground">Anda terdaftar di beberapa grup keluarga.</p>
+                            <h3 className="text-foreground font-semibold">
+                                Ganti Keluarga
+                            </h3>
+                            <p className="text-muted-foreground text-xs">
+                                Anda terdaftar di beberapa grup keluarga.
+                            </p>
                         </div>
                         <div className="flex gap-2">
                             {allFamilies.map((f) => (
@@ -136,7 +168,11 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                     key={f.id}
                                     type="button"
                                     onClick={() => handleSwitchFamily(f.id)}
-                                    variant={f.id === family.id ? 'default' : 'outline'}
+                                    variant={
+                                        f.id === family.id
+                                            ? 'default'
+                                            : 'outline'
+                                    }
                                     size="sm"
                                 >
                                     {f.name}
@@ -147,45 +183,62 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                 )}
 
                 {/* Members List */}
-                <Card className="shadow-sm border-border p-6 space-y-4">
-                    <div className="flex items-center justify-between pb-4 border-b border-border">
+                <Card className="border-border space-y-4 p-6 shadow-sm">
+                    <div className="border-border flex items-center justify-between border-b pb-4">
                         <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-emerald-500/10 text-emerald-500 rounded-xl">
+                            <div className="rounded-xl bg-emerald-500/10 p-2.5 text-emerald-500">
                                 <Users className="size-5" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-foreground">Anggota Keluarga</h2>
-                                <p className="text-xs text-muted-foreground">{family.members.length} Anggota Terdaftar</p>
+                                <h2 className="text-foreground text-lg font-bold">
+                                    Anggota Keluarga
+                                </h2>
+                                <p className="text-muted-foreground text-xs">
+                                    {family.members.length} Anggota Terdaftar
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         {family.members.map((member) => (
                             <div
                                 key={member.id}
-                                className="bg-muted/50 border border-border rounded-xl p-4 flex items-center justify-between hover:border-accent transition-all"
+                                className="bg-muted/50 border-border hover:border-accent flex items-center justify-between rounded-xl border p-4 transition-all"
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="size-11 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-lg border border-border">
-                                        {(member.nickname || member.user.name).charAt(0).toUpperCase()}
+                                    <div className="bg-primary/10 text-primary border-border flex size-11 items-center justify-center rounded-full border text-lg font-bold">
+                                        {(member.nickname || member.user.name)
+                                            .charAt(0)
+                                            .toUpperCase()}
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            <span className="font-semibold text-foreground">
-                                                {member.nickname || member.user.name}
+                                            <span className="text-foreground font-semibold">
+                                                {member.nickname ||
+                                                    member.user.name}
                                             </span>
                                             {member.role === 'owner' ? (
-                                                <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-500 border-amber-500/30 gap-1">
-                                                    <Crown className="size-3" /> Owner
+                                                <Badge
+                                                    variant="outline"
+                                                    className="gap-1 border-amber-500/30 bg-amber-500/10 text-[10px] text-amber-500"
+                                                >
+                                                    <Crown className="size-3" />{' '}
+                                                    Owner
                                                 </Badge>
                                             ) : (
-                                                <Badge variant="secondary" className="text-[10px] gap-1">
-                                                    <Shield className="size-3" /> Member
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="gap-1 text-[10px]"
+                                                >
+                                                    <Shield className="size-3" />{' '}
+                                                    Member
                                                 </Badge>
                                             )}
                                         </div>
-                                        <p className="text-xs text-muted-foreground mt-0.5">{member.user.email}</p>
+                                        <p className="text-muted-foreground mt-0.5 text-xs">
+                                            {member.user.email}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -193,7 +246,9 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                     <div className="flex items-center gap-2">
                                         <Button
                                             type="button"
-                                            onClick={() => handleOpenEdit(member)}
+                                            onClick={() =>
+                                                handleOpenEdit(member)
+                                            }
                                             variant="outline"
                                             size="sm"
                                         >
@@ -202,7 +257,11 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                         {member.role !== 'owner' && (
                                             <Button
                                                 type="button"
-                                                onClick={() => handleRemoveMember(member.id)}
+                                                onClick={() =>
+                                                    handleRemoveMember(
+                                                        member.id,
+                                                    )
+                                                }
                                                 variant="destructive"
                                                 size="sm"
                                             >
@@ -218,19 +277,30 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
 
                 {/* Dialog Edit Member */}
                 {editingMember && (
-                    <Dialog open={!!editingMember} onOpenChange={() => setEditingMember(null)}>
+                    <Dialog
+                        open={!!editingMember}
+                        onOpenChange={() => setEditingMember(null)}
+                    >
                         <DialogContent className="max-w-md">
                             <DialogHeader>
                                 <DialogTitle>Edit Anggota Keluarga</DialogTitle>
                             </DialogHeader>
 
-                            <form onSubmit={handleUpdateMember} className="space-y-4 pt-2">
+                            <form
+                                onSubmit={handleUpdateMember}
+                                className="space-y-4 pt-2"
+                            >
                                 <div>
                                     <Label>Panggilan / Nickname</Label>
                                     <Input
                                         type="text"
                                         value={editForm.data.nickname}
-                                        onChange={(e) => editForm.setData('nickname', e.target.value)}
+                                        onChange={(e) =>
+                                            editForm.setData(
+                                                'nickname',
+                                                e.target.value,
+                                            )
+                                        }
                                         className="mt-1"
                                     />
                                 </div>
@@ -238,11 +308,20 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                     <Label>Peran Dalam Keluarga</Label>
                                     <select
                                         value={editForm.data.role}
-                                        onChange={(e) => editForm.setData('role', e.target.value as any)}
-                                        className="w-full bg-background border border-input text-foreground rounded-md p-2.5 mt-1 text-sm focus:ring-2 focus:ring-ring"
+                                        onChange={(e) =>
+                                            editForm.setData(
+                                                'role',
+                                                e.target.value as any,
+                                            )
+                                        }
+                                        className="bg-background border-input text-foreground focus:ring-ring mt-1 w-full rounded-md border p-2.5 text-sm focus:ring-2"
                                     >
-                                        <option value="owner">Owner (Pengelola Utama)</option>
-                                        <option value="member">Member (Anggota Keluarga)</option>
+                                        <option value="owner">
+                                            Owner (Pengelola Utama)
+                                        </option>
+                                        <option value="member">
+                                            Member (Anggota Keluarga)
+                                        </option>
                                     </select>
                                 </div>
                                 <div className="flex justify-end gap-2 pt-2">
@@ -253,7 +332,11 @@ export default function FamilyIndex({ family, allFamilies, userRole }: FamilyPro
                                     >
                                         Batal
                                     </Button>
-                                    <Button type="submit" disabled={editForm.processing} className="font-bold">
+                                    <Button
+                                        type="submit"
+                                        disabled={editForm.processing}
+                                        className="font-bold"
+                                    >
                                         Simpan Perubahan
                                     </Button>
                                 </div>

@@ -8,16 +8,16 @@ Aplikasi digunakan oleh keluarga kecil, terutama **suami dan istri**, untuk meng
 
 Aplikasi harus memungkinkan:
 
-* Suami dan istri login menggunakan akun masing-masing.
-* Keduanya mengakses data keuangan keluarga yang sama.
-* Setiap transaksi mencatat siapa yang memasukkan data.
-* Pengeluaran dapat dikategorikan.
-* Pengeluaran mengurangi saldo wallet.
-* Pengeluaran dapat dibandingkan dengan budget kategori.
-* Pemasukan menambah saldo wallet.
-* Transfer antar-wallet tidak dianggap sebagai pengeluaran.
-* Tersedia dashboard keuangan.
-* Tersedia laporan bulanan.
+- Suami dan istri login menggunakan akun masing-masing.
+- Keduanya mengakses data keuangan keluarga yang sama.
+- Setiap transaksi mencatat siapa yang memasukkan data.
+- Pengeluaran dapat dikategorikan.
+- Pengeluaran mengurangi saldo wallet.
+- Pengeluaran dapat dibandingkan dengan budget kategori.
+- Pemasukan menambah saldo wallet.
+- Transfer antar-wallet tidak dianggap sebagai pengeluaran.
+- Tersedia dashboard keuangan.
+- Tersedia laporan bulanan.
 
 ---
 
@@ -29,13 +29,13 @@ Aplikasi harus memungkinkan:
 
 Digunakan untuk:
 
-* Authentication
-* Business logic
-* Authorization
-* REST API
-* Database management
-* Validation
-* Reporting
+- Authentication
+- Business logic
+- Authorization
+- REST API
+- Database management
+- Validation
+- Reporting
 
 ## Frontend
 
@@ -43,12 +43,12 @@ Digunakan untuk:
 
 Digunakan untuk:
 
-* Dashboard
-* Form transaksi
-* Wallet
-* Budget
-* Laporan
-* Family management
+- Dashboard
+- Form transaksi
+- Wallet
+- Budget
+- Laporan
+- Family management
 
 ## Database
 
@@ -128,12 +128,12 @@ Aplikasi terdiri dari:
 
 User dapat:
 
-* Register
-* Login
-* Logout
-* Forgot password
-* Reset password
-* Mengelola profile
+- Register
+- Login
+- Logout
+- Forgot password
+- Reset password
+- Mengelola profile
 
 Setiap user mempunyai akun sendiri.
 
@@ -181,16 +181,16 @@ member
 
 Owner dapat:
 
-* Mengelola family
-* Mengundang member
-* Menghapus member
-* Mengelola pengaturan family
+- Mengelola family
+- Mengundang member
+- Menghapus member
+- Mengelola pengaturan family
 
 Member dapat:
 
-* Melihat data keluarga
-* Menambah transaksi
-* Mengelola transaksi sesuai permission
+- Melihat data keluarga
+- Menambah transaksi
+- Mengelola transaksi sesuai permission
 
 Permission dapat dikembangkan kemudian.
 
@@ -358,10 +358,10 @@ amount         = 200000
 
 Transfer:
 
-* Mengurangi wallet asal.
-* Menambah wallet tujuan.
-* Tidak dihitung sebagai expense.
-* Tidak mengurangi budget.
+- Mengurangi wallet asal.
+- Menambah wallet tujuan.
+- Tidak dihitung sebagai expense.
+- Tidak mengurangi budget.
 
 Ini penting agar total kekayaan keluarga tidak salah dihitung.
 

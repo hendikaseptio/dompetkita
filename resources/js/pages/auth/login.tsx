@@ -75,6 +75,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                 <Checkbox
                                     id="remember"
                                     name="remember"
+                                    defaultChecked={true}
                                     tabIndex={3}
                                 />
                                 <Label htmlFor="remember">Remember me</Label>

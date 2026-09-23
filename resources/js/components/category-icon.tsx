@@ -46,7 +46,10 @@ import {
     Zap,
 } from 'lucide-react';
 
-export const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+export const CATEGORY_ICONS: Record<
+    string,
+    React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+> = {
     ShoppingBag,
     ShoppingCart,
     Utensils,
@@ -100,14 +103,14 @@ interface CategoryIconProps {
     style?: React.CSSProperties;
 }
 
-export function CategoryIcon({ name, className = 'size-4', color, style }: CategoryIconProps) {
+export function CategoryIcon({
+    name,
+    className = 'size-4',
+    color,
+    style,
+}: CategoryIconProps) {
     const IconComponent = (name && CATEGORY_ICONS[name]) || Tag;
     const combinedStyle = color ? { color, ...style } : style;
 
-    return (
-        <IconComponent
-            className={className}
-            style={combinedStyle}
-        />
-    );
+    return <IconComponent className={className} style={combinedStyle} />;
 }

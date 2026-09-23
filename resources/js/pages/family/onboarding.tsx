@@ -28,30 +28,36 @@ export default function Onboarding() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 p-4 text-slate-100">
             {/* Ambient Background Gradient Blobs */}
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="pointer-events-none absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
+            <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
 
-            <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 shadow-2xl relative z-10">
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center size-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 font-bold mb-4 shadow-lg shadow-emerald-500/20">
+            <div className="relative z-10 w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-xl">
+                <div className="mb-8 text-center">
+                    <div className="mb-4 inline-flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 font-bold text-slate-950 shadow-lg shadow-emerald-500/20">
                         <Home className="size-7" />
                     </div>
-                    <h1 className="text-2xl font-bold tracking-tight text-white">Selamat Datang di DompetKita!</h1>
-                    <p className="text-sm text-slate-400 mt-2">
-                        Halo, <span className="font-semibold text-slate-200">{auth?.user?.name}</span>. Mari hubungkan atau buat grup keuangan keluarga Anda.
+                    <h1 className="text-2xl font-bold tracking-tight text-white">
+                        Selamat Datang di DompetKita!
+                    </h1>
+                    <p className="mt-2 text-sm text-slate-400">
+                        Halo,{' '}
+                        <span className="font-semibold text-slate-200">
+                            {auth?.user?.name}
+                        </span>
+                        . Mari hubungkan atau buat grup keuangan keluarga Anda.
                     </p>
                 </div>
 
                 {/* Mode Selector */}
-                <div className="grid grid-cols-2 gap-2 bg-slate-800/60 p-1 rounded-xl mb-6 border border-slate-700/50">
+                <div className="mb-6 grid grid-cols-2 gap-2 rounded-xl border border-slate-700/50 bg-slate-800/60 p-1">
                     <button
                         type="button"
                         onClick={() => setMode('create')}
-                        className={`py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                        className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
                             mode === 'create'
-                                ? 'bg-emerald-500 text-slate-950 font-semibold shadow'
+                                ? 'bg-emerald-500 font-semibold text-slate-950 shadow'
                                 : 'text-slate-400 hover:text-white'
                         }`}
                     >
@@ -61,9 +67,9 @@ export default function Onboarding() {
                     <button
                         type="button"
                         onClick={() => setMode('join')}
-                        className={`py-2 px-3 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                        className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
                             mode === 'join'
-                                ? 'bg-emerald-500 text-slate-950 font-semibold shadow'
+                                ? 'bg-emerald-500 font-semibold text-slate-950 shadow'
                                 : 'text-slate-400 hover:text-white'
                         }`}
                     >
@@ -75,59 +81,84 @@ export default function Onboarding() {
                 {mode === 'create' ? (
                     <form onSubmit={handleCreateSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="family-name" className="text-slate-300">Nama Keluarga / Rumah Tangga</Label>
+                            <Label
+                                htmlFor="family-name"
+                                className="text-slate-300"
+                            >
+                                Nama Keluarga / Rumah Tangga
+                            </Label>
                             <Input
                                 id="family-name"
                                 type="text"
                                 placeholder="Contoh: Keluarga Budi & Siti"
                                 value={createForm.data.name}
-                                onChange={(e) => createForm.setData('name', e.target.value)}
-                                className="bg-slate-800/80 border-slate-700 text-white mt-1.5 focus:border-emerald-500"
+                                onChange={(e) =>
+                                    createForm.setData('name', e.target.value)
+                                }
+                                className="mt-1.5 border-slate-700 bg-slate-800/80 text-white focus:border-emerald-500"
                                 required
                             />
                             {createForm.errors.name && (
-                                <p className="text-xs text-rose-400 mt-1">{createForm.errors.name}</p>
+                                <p className="mt-1 text-xs text-rose-400">
+                                    {createForm.errors.name}
+                                </p>
                             )}
                         </div>
                         <Button
                             type="submit"
                             disabled={createForm.processing}
-                            className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2.5 shadow-lg shadow-emerald-500/20"
+                            className="w-full bg-emerald-500 py-2.5 font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 hover:bg-emerald-400"
                         >
-                            {createForm.processing ? 'Memproses...' : 'Buat Keluarga Baru'}
+                            {createForm.processing
+                                ? 'Memproses...'
+                                : 'Buat Keluarga Baru'}
                         </Button>
                     </form>
                 ) : (
                     <form onSubmit={handleJoinSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="family-code" className="text-slate-300">Kode Unik Keluarga</Label>
+                            <Label
+                                htmlFor="family-code"
+                                className="text-slate-300"
+                            >
+                                Kode Unik Keluarga
+                            </Label>
                             <Input
                                 id="family-code"
                                 type="text"
                                 placeholder="Contoh: DK-ABC123"
                                 value={joinForm.data.code}
-                                onChange={(e) => joinForm.setData('code', e.target.value.toUpperCase())}
-                                className="bg-slate-800/80 border-slate-700 text-white mt-1.5 focus:border-emerald-500 uppercase tracking-widest font-mono"
+                                onChange={(e) =>
+                                    joinForm.setData(
+                                        'code',
+                                        e.target.value.toUpperCase(),
+                                    )
+                                }
+                                className="mt-1.5 border-slate-700 bg-slate-800/80 font-mono tracking-widest text-white uppercase focus:border-emerald-500"
                                 required
                             />
                             {joinForm.errors.code && (
-                                <p className="text-xs text-rose-400 mt-1">{joinForm.errors.code}</p>
+                                <p className="mt-1 text-xs text-rose-400">
+                                    {joinForm.errors.code}
+                                </p>
                             )}
                         </div>
                         <Button
                             type="submit"
                             disabled={joinForm.processing}
-                            className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-2.5 shadow-lg shadow-emerald-500/20"
+                            className="w-full bg-emerald-500 py-2.5 font-semibold text-slate-950 shadow-lg shadow-emerald-500/20 hover:bg-emerald-400"
                         >
-                            {joinForm.processing ? 'Memproses...' : 'Gabung Keluarga'}
+                            {joinForm.processing
+                                ? 'Memproses...'
+                                : 'Gabung Keluarga'}
                         </Button>
                     </form>
                 )}
 
-                <div className="mt-8 pt-4 border-t border-slate-800 text-center">
+                <div className="mt-8 border-t border-slate-800 pt-4 text-center">
                     <a
                         href="/logout"
-                        className="inline-flex items-center text-xs text-slate-400 hover:text-slate-200 transition-colors gap-1.5"
+                        className="inline-flex items-center gap-1.5 text-xs text-slate-400 transition-colors hover:text-slate-200"
                     >
                         <LogOut className="size-3.5" />
                         Keluar Akun
