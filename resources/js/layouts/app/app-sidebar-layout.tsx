@@ -2,7 +2,9 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
+import { MobileFabButtons } from '@/components/mobile-fab';
 import { MobileFloatingDock } from '@/components/mobile-floating-dock';
+import { MobileFabProvider } from '@/contexts/mobile-fab-context';
 import type { AppLayoutProps } from '@/types';
 
 export default function AppSidebarLayout({
@@ -10,16 +12,19 @@ export default function AppSidebarLayout({
     breadcrumbs = [],
 }: AppLayoutProps) {
     return (
-        <AppShell variant="sidebar">
-            <AppSidebar />
-            <AppContent
-                variant="sidebar"
-                className="min-w-0 overflow-x-clip pb-24 md:pb-6"
-            >
-                <AppSidebarHeader breadcrumbs={breadcrumbs} />
-                {children}
-            </AppContent>
-            <MobileFloatingDock />
-        </AppShell>
+        <MobileFabProvider>
+            <AppShell variant="sidebar">
+                <AppSidebar />
+                <AppContent
+                    variant="sidebar"
+                    className="min-w-0 overflow-x-clip pb-24 md:pb-6"
+                >
+                    <AppSidebarHeader breadcrumbs={breadcrumbs} />
+                    {children}
+                </AppContent>
+                <MobileFabButtons />
+                <MobileFloatingDock />
+            </AppShell>
+        </MobileFabProvider>
     );
 }

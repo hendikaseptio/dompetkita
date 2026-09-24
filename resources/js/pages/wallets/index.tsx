@@ -10,6 +10,7 @@ import {
     Wallet as WalletIcon,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { MobileFab } from '@/components/mobile-fab';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -117,6 +118,19 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
         <>
             <Head title="Manajemen Wallet" />
 
+            {/* Mobile FAB */}
+            <MobileFab
+                actions={[
+                    {
+                        id: 'add-wallet',
+                        label: 'Tambah',
+                        icon: <Plus className="size-4" />,
+                        onClick: () => setIsAddModalOpen(true),
+                        color: 'black',
+                    },
+                ]}
+            />
+
             <div className="mx-auto max-w-7xl space-y-6 p-4 pb-28 md:p-6 md:pb-8">
                 {/* Top Banner */}
                 <div className="flex flex-col gap-3">
@@ -189,10 +203,10 @@ export default function WalletsIndex({ wallets, totalBalance }: WalletsProps) {
                                                 {w.type === 'cash'
                                                     ? 'Tunai / Cash'
                                                     : w.type === 'digital'
-                                                      ? 'E-Wallet'
-                                                      : w.type === 'bank'
-                                                        ? 'Bank'
-                                                        : 'Tabungan'}
+                                                        ? 'E-Wallet'
+                                                        : w.type === 'bank'
+                                                            ? 'Bank'
+                                                            : 'Tabungan'}
                                             </Badge>
                                         </div>
                                     </div>

@@ -13,6 +13,7 @@ import {
     Trash2,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { MobileFab } from '@/components/mobile-fab';
 import { CategoryIcon } from '@/components/category-icon';
 import { IconPicker } from '@/components/icon-picker';
 import { Badge } from '@/components/ui/badge';
@@ -230,10 +231,30 @@ export default function BudgetsIndex({
         <>
             <Head title="Alokasi Budget Keuangan" />
 
+            {/* Mobile FAB — Floating Action Buttons for mobile view */}
+            <MobileFab
+                actions={[
+                    {
+                        id: 'add-budget',
+                        label: 'Atur Limit',
+                        icon: <Plus className="size-4" />,
+                        onClick: () => handleOpenSetBudget(),
+                        color: 'purple',
+                    },
+                    {
+                        id: 'manage-categories',
+                        label: 'Kelola Kategori',
+                        icon: <Tag className="size-4" />,
+                        onClick: () => setIsCatManageOpen(true),
+                        color: 'blue',
+                    },
+                ]}
+            />
+
             <div className="mx-auto max-w-7xl space-y-4 p-3 pb-28 sm:p-6 md:pb-8">
                 {/* Header & Month Selector */}
                 <div className="flex flex-col gap-2.5">
-                    <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div className="min-w-0">
                             <h1 className="text-foreground flex items-center gap-2 text-lg font-bold tracking-tight sm:text-xl">
                                 <PieChart className="size-5 shrink-0 text-purple-500" />
@@ -384,13 +405,12 @@ export default function BudgetsIndex({
                             budgetedItems.map((item) => (
                                 <Card
                                     key={item.id}
-                                    className={`space-y-3 border p-5 shadow-sm transition-all ${
-                                        item.is_over_budget
-                                            ? 'border-rose-500/60 bg-rose-500/5'
-                                            : item.percentage >= 80
-                                              ? 'border-amber-500/60 bg-amber-500/5'
-                                              : 'border-border'
-                                    }`}
+                                    className={`space-y-3 border p-5 shadow-sm transition-all ${item.is_over_budget
+                                        ? 'border-rose-500/60 bg-rose-500/5'
+                                        : item.percentage >= 80
+                                            ? 'border-amber-500/60 bg-amber-500/5'
+                                            : 'border-border'
+                                        }`}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
@@ -499,13 +519,12 @@ export default function BudgetsIndex({
                                         </div>
                                         <div className="bg-muted border-border h-3 w-full overflow-hidden rounded-full border p-0.5">
                                             <div
-                                                className={`h-full rounded-full transition-all duration-500 ${
-                                                    item.is_over_budget
-                                                        ? 'bg-rose-500'
-                                                        : item.percentage >= 80
-                                                          ? 'bg-amber-500'
-                                                          : 'bg-emerald-500'
-                                                }`}
+                                                className={`h-full rounded-full transition-all duration-500 ${item.is_over_budget
+                                                    ? 'bg-rose-500'
+                                                    : item.percentage >= 80
+                                                        ? 'bg-amber-500'
+                                                        : 'bg-emerald-500'
+                                                    }`}
                                                 style={{
                                                     width: `${Math.min(100, item.percentage)}%`,
                                                 }}
@@ -551,7 +570,7 @@ export default function BudgetsIndex({
                         {unbudgetedItems.map((item) => (
                             <Card
                                 key={item.category_id}
-                                className="border-border flex min-w-0 items-center justify-between gap-2 p-2.5 shadow-xs transition-all sm:p-3"
+                                className="border-border flex min-w-0 justify-between gap-2 p-2.5 shadow-xs transition-all sm:p-3"
                             >
                                 <div className="flex min-w-0 items-center gap-2">
                                     <div
@@ -730,12 +749,11 @@ export default function BudgetsIndex({
                                                     <span>{cat.name}</span>
                                                     <Badge
                                                         variant="outline"
-                                                        className={`px-1.5 py-0 text-[10px] font-medium ${
-                                                            cat.type ===
+                                                        className={`px-1.5 py-0 text-[10px] font-medium ${cat.type ===
                                                             'income'
-                                                                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500'
-                                                                : 'border-purple-500/30 bg-purple-500/10 text-purple-500'
-                                                        }`}
+                                                            ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500'
+                                                            : 'border-purple-500/30 bg-purple-500/10 text-purple-500'
+                                                            }`}
                                                     >
                                                         {cat.type === 'income'
                                                             ? 'Pemasukan'
@@ -872,11 +890,10 @@ export default function BudgetsIndex({
                                             onClick={() =>
                                                 categoryForm.setData('color', c)
                                             }
-                                            className={`border-border size-7 rounded-full border transition-transform ${
-                                                categoryForm.data.color === c
-                                                    ? 'ring-primary scale-125 ring-2 ring-offset-2'
-                                                    : 'hover:scale-110'
-                                            }`}
+                                            className={`border-border size-7 rounded-full border transition-transform ${categoryForm.data.color === c
+                                                ? 'ring-primary scale-125 ring-2 ring-offset-2'
+                                                : 'hover:scale-110'
+                                                }`}
                                             style={{ backgroundColor: c }}
                                         />
                                     ))}

@@ -8,6 +8,7 @@ import {
     Trash2,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { MobileFab } from '@/components/mobile-fab';
 import { CategoryIcon } from '@/components/category-icon';
 import { IconPicker } from '@/components/icon-picker';
 import { Badge } from '@/components/ui/badge';
@@ -106,6 +107,22 @@ export default function CategoriesIndex({ categories }: CategoriesProps) {
     return (
         <>
             <Head title="Manajemen Kategori" />
+
+            {/* Mobile FAB */}
+            <MobileFab
+                actions={[
+                    {
+                        id: 'add-category',
+                        label: 'Tambah Kategori',
+                        icon: <Plus className="size-4" />,
+                        onClick: () => {
+                            addForm.setData('type', activeTab);
+                            setIsAddOpen(true);
+                        },
+                        color: 'emerald',
+                    },
+                ]}
+            />
 
             <div className="mx-auto max-w-6xl space-y-4 p-3 pb-28 sm:p-6 md:pb-8">
                 {/* Header */}

@@ -7,11 +7,13 @@ import {
     Filter,
     Plus,
     Receipt,
+    ReceiptText,
     RotateCcw,
     Search,
     Trash2,
 } from 'lucide-react';
 import React, { useState } from 'react';
+import { MobileFab } from '@/components/mobile-fab';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -189,6 +191,19 @@ export default function TransactionsIndex({
     return (
         <>
             <Head title="Histori Transaksi" />
+
+            {/* Mobile FAB */}
+            <MobileFab
+                actions={[
+                    {
+                        id: 'add-transaction',
+                        label: 'Tambah',
+                        icon: <ReceiptText className="size-4" />,
+                        onClick: () => setIsAddOpen(true),
+                        color: 'black',
+                    },
+                ]}
+            />
 
             <div className="mx-auto max-w-7xl space-y-6 p-4 pb-28 sm:p-6 md:pb-10">
                 {/* Top Bar */}
@@ -387,7 +402,7 @@ export default function TransactionsIndex({
                                                         }}
                                                     >
                                                         {tx.type ===
-                                                        'transfer' ? (
+                                                            'transfer' ? (
                                                             <ArrowLeftRight className="size-4 text-amber-500" />
                                                         ) : (
                                                             <CategoryIcon
@@ -408,7 +423,7 @@ export default function TransactionsIndex({
                                                             {tx.category
                                                                 ?.name ||
                                                                 (tx.type ===
-                                                                'transfer'
+                                                                    'transfer'
                                                                     ? 'Transfer Antar Wallet'
                                                                     : 'Transaksi')}
                                                         </span>
@@ -472,15 +487,15 @@ export default function TransactionsIndex({
                                                             ? 'text-blue-500'
                                                             : tx.type ===
                                                                 'expense'
-                                                              ? 'text-rose-500'
-                                                              : 'text-amber-500'
+                                                                ? 'text-rose-500'
+                                                                : 'text-amber-500'
                                                     }
                                                 >
                                                     {tx.type === 'income'
                                                         ? '+'
                                                         : tx.type === 'expense'
-                                                          ? '-'
-                                                          : ''}
+                                                            ? '-'
+                                                            : ''}
                                                     {formatRp(
                                                         Number(tx.amount),
                                                     )}
@@ -578,19 +593,18 @@ export default function TransactionsIndex({
                                     </div>
 
                                     <span
-                                        className={`shrink-0 font-mono text-sm font-bold sm:text-base ${
-                                            tx.type === 'income'
-                                                ? 'text-blue-600 dark:text-blue-400'
-                                                : tx.type === 'expense'
-                                                  ? 'text-rose-600 dark:text-rose-400'
-                                                  : 'text-amber-600 dark:text-amber-400'
-                                        }`}
+                                        className={`shrink-0 font-mono text-sm font-bold sm:text-base ${tx.type === 'income'
+                                            ? 'text-blue-600 dark:text-blue-400'
+                                            : tx.type === 'expense'
+                                                ? 'text-rose-600 dark:text-rose-400'
+                                                : 'text-amber-600 dark:text-amber-400'
+                                            }`}
                                     >
                                         {tx.type === 'income'
                                             ? '+'
                                             : tx.type === 'expense'
-                                              ? '-'
-                                              : ''}
+                                                ? '-'
+                                                : ''}
                                         {formatRp(Number(tx.amount))}
                                     </span>
                                 </div>
@@ -675,11 +689,10 @@ export default function TransactionsIndex({
                                 onClick={() =>
                                     addForm.setData('type', 'expense')
                                 }
-                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${
-                                    addForm.data.type === 'expense'
-                                        ? 'bg-rose-500 text-white shadow-xs'
-                                        : 'text-muted-foreground'
-                                }`}
+                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${addForm.data.type === 'expense'
+                                    ? 'bg-rose-500 text-white shadow-xs'
+                                    : 'text-muted-foreground'
+                                    }`}
                             >
                                 Pengeluaran
                             </button>
@@ -688,11 +701,10 @@ export default function TransactionsIndex({
                                 onClick={() =>
                                     addForm.setData('type', 'income')
                                 }
-                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${
-                                    addForm.data.type === 'income'
-                                        ? 'bg-blue-500 text-white shadow-xs'
-                                        : 'text-muted-foreground'
-                                }`}
+                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${addForm.data.type === 'income'
+                                    ? 'bg-blue-500 text-white shadow-xs'
+                                    : 'text-muted-foreground'
+                                    }`}
                             >
                                 Pemasukan
                             </button>
@@ -701,11 +713,10 @@ export default function TransactionsIndex({
                                 onClick={() =>
                                     addForm.setData('type', 'transfer')
                                 }
-                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${
-                                    addForm.data.type === 'transfer'
-                                        ? 'bg-amber-500 text-white shadow-xs'
-                                        : 'text-muted-foreground'
-                                }`}
+                                className={`rounded-lg py-1.5 text-xs font-bold transition-all ${addForm.data.type === 'transfer'
+                                    ? 'bg-amber-500 text-white shadow-xs'
+                                    : 'text-muted-foreground'
+                                    }`}
                             >
                                 Transfer
                             </button>
@@ -763,57 +774,57 @@ export default function TransactionsIndex({
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 {(addForm.data.type === 'expense' ||
                                     addForm.data.type === 'transfer') && (
-                                    <div>
-                                        <Label>Wallet Asal</Label>
-                                        <select
-                                            value={addForm.data.wallet_from_id}
-                                            onChange={(e) =>
-                                                addForm.setData(
-                                                    'wallet_from_id',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
-                                            required
-                                        >
-                                            <option value="">
-                                                -- Pilih Wallet --
-                                            </option>
-                                            {wallets.map((w) => (
-                                                <option key={w.id} value={w.id}>
-                                                    {w.name}
+                                        <div>
+                                            <Label>Wallet Asal</Label>
+                                            <select
+                                                value={addForm.data.wallet_from_id}
+                                                onChange={(e) =>
+                                                    addForm.setData(
+                                                        'wallet_from_id',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
+                                                required
+                                            >
+                                                <option value="">
+                                                    -- Pilih Wallet --
                                                 </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
+                                                {wallets.map((w) => (
+                                                    <option key={w.id} value={w.id}>
+                                                        {w.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
 
                                 {(addForm.data.type === 'income' ||
                                     addForm.data.type === 'transfer') && (
-                                    <div>
-                                        <Label>Wallet Tujuan</Label>
-                                        <select
-                                            value={addForm.data.wallet_to_id}
-                                            onChange={(e) =>
-                                                addForm.setData(
-                                                    'wallet_to_id',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
-                                            required
-                                        >
-                                            <option value="">
-                                                -- Pilih Wallet --
-                                            </option>
-                                            {wallets.map((w) => (
-                                                <option key={w.id} value={w.id}>
-                                                    {w.name}
+                                        <div>
+                                            <Label>Wallet Tujuan</Label>
+                                            <select
+                                                value={addForm.data.wallet_to_id}
+                                                onChange={(e) =>
+                                                    addForm.setData(
+                                                        'wallet_to_id',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="bg-background border-input text-foreground mt-1 w-full rounded-md border p-2.5 text-sm"
+                                                required
+                                            >
+                                                <option value="">
+                                                    -- Pilih Wallet --
                                                 </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )}
+                                                {wallets.map((w) => (
+                                                    <option key={w.id} value={w.id}>
+                                                        {w.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
                             </div>
 
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
